@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,7 +95,6 @@
   <ItemGroup>
     <Folder Include="Boundary\" />
     <Folder Include="Controller\" />
-    <Folder Include="DataAccess\" />
     <Folder Include="Entity\" />
   </ItemGroup>
   <ItemGroup>
