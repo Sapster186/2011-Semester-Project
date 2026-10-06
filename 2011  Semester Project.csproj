@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundary\FundingInformationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\FundingInformationForm.Designer.cs">
+      <DependentUpon>FundingInformationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controller\ReportController.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\ExportReportDA.cs" />
@@ -102,7 +108,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Boundary\" />
     <Folder Include="Database\" />
   </ItemGroup>
   <ItemGroup>
