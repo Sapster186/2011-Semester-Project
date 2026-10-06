@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\ReportController.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\ExportReportDA.cs" />
     <Compile Include="DataAccess\FundFacultyDA.cs" />
@@ -102,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Boundary\" />
-    <Folder Include="Controller\" />
     <Folder Include="Database\" />
   </ItemGroup>
   <ItemGroup>
