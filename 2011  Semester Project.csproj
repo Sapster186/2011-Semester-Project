@@ -67,11 +67,23 @@
     <Compile Include="Boundary\AdvisorySummaryForm.Designer.cs">
       <DependentUpon>AdvisorySummaryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\CareerAdvisorDashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\CareerAdvisorDashboardForm.Designer.cs">
+      <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\FundingInformationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Boundary\FundingInformationForm.Designer.cs">
       <DependentUpon>FundingInformationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Boundary\ReportSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
+      <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controller\ReportController.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
