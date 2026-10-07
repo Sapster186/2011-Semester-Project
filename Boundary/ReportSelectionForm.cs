@@ -120,5 +120,10 @@ namespace _2011__Semester_Project.Boundary
                 e.CellStyle.Font = new System.Drawing.Font(dgvResults.Font, System.Drawing.FontStyle.Bold);
             }
         }
+
+        private void ReportSelectionForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
