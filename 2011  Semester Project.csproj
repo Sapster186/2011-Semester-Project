@@ -100,6 +100,11 @@
     <Compile Include="Entity\FundFaculty.cs" />
     <Compile Include="Entity\FundOption.cs" />
     <Compile Include="Entity\FundProgramme.cs" />
+    <Compile Include="Entity\GradeLevel.cs" />
+    <Compile Include="Entity\Learner.cs" />
+    <Compile Include="Entity\LearnerInterestAnswer.cs" />
+    <Compile Include="Entity\LearnerSubject.cs" />
+    <Compile Include="Entity\Subject.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +113,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Boundary\ReportSelectionForm.resx">
+      <DependentUpon>ReportSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

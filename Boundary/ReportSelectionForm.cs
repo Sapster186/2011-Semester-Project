@@ -280,5 +280,10 @@ namespace _2011__Semester_Project.Boundary
             if (!HasReport()) return;
             PrintHelper.Print(BuildReportText(), new Font("Consolas", 9));
         }
+
+        private void ReportSelectionForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
