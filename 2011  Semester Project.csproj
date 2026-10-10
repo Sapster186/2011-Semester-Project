@@ -79,6 +79,10 @@
     <Compile Include="Boundary\FundingInformationForm.Designer.cs">
       <DependentUpon>FundingInformationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\PrintHelper.cs" />
+    <Compile Include="Boundary\ReadOnlyAdvisorySummaryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Boundary\ReportSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +95,7 @@
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
+    <Compile Include="DataAccess\ReportDA.cs" />
     <Compile Include="Entity\ExportReport.cs" />
     <Compile Include="Entity\FundFaculty.cs" />
     <Compile Include="Entity\FundOption.cs" />
