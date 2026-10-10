@@ -1,58 +1,58 @@
-/* ============================================================
-   Interest Questionnaire Seed Script
-   Member C - INF2011S Semester Project
-   Run AFTER Member A's table-creation script.
-   ============================================================ */
+-- INF2011S: Interest Questionnaire Seed Script
+-- Member C
+-- Inserts interest questions linked to interest groups.
 
--- Replace [YourDatabaseName] with the actual database name
-USE [YourDatabaseName];
-GO
-
-/* ---------- 1. InterestGroup ---------- */
-IF NOT EXISTS (SELECT 1 FROM InterestGroup)
+IF OBJECT_ID('dbo.InterestQuery', 'U') IS NOT NULL
 BEGIN
-    SET IDENTITY_INSERT InterestGroup ON;
+    -- Computing & IT questions
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I enjoy solving problems using logic and technology.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (1, 'I enjoy solving problems using logic and technology.', 2.00, 1);
 
-    INSERT INTO InterestGroup (interestGroupID, groupName, description) VALUES
-    (1, 'Computing & IT', 'Programming, data, systems and technology'),
-    (2, 'Commerce & Business', 'Finance, accounting, management and entrepreneurship'),
-    (3, 'Health & Life Sciences', 'Biology, health, medicine and living systems'),
-    (4, 'Engineering & Physical Sciences', 'Physics, chemistry, structures and machines'),
-    (5, 'Humanities & Social Sciences', 'Language, history, psychology and society');
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I am interested in how software and computer systems work.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (1, 'I am interested in how software and computer systems work.', 1.50, 1);
 
-    SET IDENTITY_INSERT InterestGroup OFF;
-    PRINT 'InterestGroup seeded.';
+    -- Commerce & Business questions
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I enjoy working with money, business and financial decisions.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (2, 'I enjoy working with money, business and financial decisions.', 2.00, 1);
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I like leading projects and organising people or resources.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (2, 'I like leading projects and organising people or resources.', 1.50, 1);
+
+    -- Health & Life Sciences questions
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I am interested in the human body, health and medicine.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (3, 'I am interested in the human body, health and medicine.', 2.00, 1);
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I enjoy studying living things and how they function.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (3, 'I enjoy studying living things and how they function.', 1.50, 1);
+
+    -- Engineering & Physical Sciences questions
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I enjoy building, designing or understanding physical structures.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (4, 'I enjoy building, designing or understanding physical structures.', 2.00, 1);
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I am curious about how the physical world works.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (4, 'I am curious about how the physical world works.', 1.50, 1);
+
+    -- Humanities & Social Sciences questions
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I enjoy reading, writing and discussing ideas.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (5, 'I enjoy reading, writing and discussing ideas.', 2.00, 1);
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.InterestQuery WHERE questionText = 'I am interested in people, society and how they behave.')
+        INSERT INTO dbo.InterestQuery (interestGroupID, questionText, weight, isActive)
+        VALUES (5, 'I am interested in people, society and how they behave.', 1.50, 1);
+
+    PRINT 'InterestQuery questions inserted.';
 END
 ELSE
-    PRINT 'InterestGroup already has data - skipped.';
-GO
-
-/* ---------- 2. InterestQuery ---------- */
-IF NOT EXISTS (SELECT 1 FROM InterestQuery)
 BEGIN
-    SET IDENTITY_INSERT InterestQuery ON;
-
-    INSERT INTO InterestQuery (interestQueryID, interestGroupID, questionText, weight, isActive) VALUES
-    (1,  1, 'I enjoy solving problems using logic and technology.',                 2.00, 1),
-    (2,  1, 'I am interested in how software and computer systems work.',           1.50, 1),
-    (3,  2, 'I enjoy working with money, business and financial decisions.',        2.00, 1),
-    (4,  2, 'I like leading projects and organising people or resources.',          1.50, 1),
-    (5,  3, 'I am interested in the human body, health and medicine.',              2.00, 1),
-    (6,  3, 'I enjoy studying living things and how they function.',                1.50, 1),
-    (7,  4, 'I enjoy building, designing or understanding physical structures.',    2.00, 1),
-    (8,  4, 'I am curious about how the physical world works (physics/chemistry).', 1.50, 1),
-    (9,  5, 'I enjoy reading, writing and discussing ideas.',                       2.00, 1),
-    (10, 5, 'I am interested in people, society and how they behave.',              1.50, 1);
-
-    SET IDENTITY_INSERT InterestQuery OFF;
-    PRINT 'InterestQuery seeded.';
+    PRINT 'ERROR: dbo.InterestQuery does not exist. Ask Member A to create it first.';
 END
-ELSE
-    PRINT 'InterestQuery already has data - skipped.';
-GO
-
-/* ---------- 3. Verify ---------- */
-SELECT 'InterestGroup' AS TableName, COUNT(*) AS RowCount FROM InterestGroup
-UNION ALL
-SELECT 'InterestQuery', COUNT(*) FROM InterestQuery;
 GO
