@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using _2011__Semester_Project.Controller;
+using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.Boundary
 {
@@ -47,12 +49,20 @@ namespace _2011__Semester_Project.Boundary
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            // Note: Contact details (txtContactDetails.Text) is optional, so it is ignored in validation 
-            // and allows for an anonymous session if left blank.
+            // Contact details are optional, so a blank value is fine (anonymous session).
+            string err = LearnerController.CaptureProfile(
+                txtFullName.Text,
+                txtSchoolName.Text,
+                (int)cmbGrade.SelectedValue,
+                cmbProvince.Text,
+                txtContact.Text);
 
-            // TODO: Save learner profile data to your Entity/Controller here before moving on
+            if (err != null)
+            {
+                MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            // Open the Subject and Mark Entry form
             SubjectMarkEntry subjectForm = new SubjectMarkEntry();
             subjectForm.Show();
             this.Hide();
