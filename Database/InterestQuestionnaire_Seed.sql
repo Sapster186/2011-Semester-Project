@@ -2,6 +2,17 @@
 -- Member C
 -- Inserts interest questions linked to interest groups.
 
+
+INSERT INTO [dbo].[InterestGroup] ([groupName]) VALUES
+('Computing & IT'),
+('Commerce & Business'),
+('Health & Life Sciences'),
+('Engineering & Physical Sciences'),
+('Humanities & Social Sciences');
+
+
+
+
 IF OBJECT_ID('dbo.InterestQuery', 'U') IS NOT NULL
 BEGIN
     -- Computing & IT questions
