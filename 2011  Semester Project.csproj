@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundary\AdminDashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\AdminDashboardForm.Designer.cs">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\AdvisorySummaryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,12 @@
     </Compile>
     <Compile Include="Boundary\LearnerProfileForm.Designer.cs">
       <DependentUpon>LearnerProfileForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Boundary\MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Boundary\SubjectMarkEntry.cs">
       <SubType>Form</SubType>
@@ -113,33 +125,45 @@
     <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
       <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
+
+    <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\Learnercontroller.cs" />
     <Compile Include="Controller\ReportController.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
+    <Compile Include="DataAccess\DegreeInterestMappingDA.cs" />
     <Compile Include="DataAccess\ExportReportDA.cs" />
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
+
+    <Compile Include="DataAccess\InterestGroupDA.cs" />
+    <Compile Include="DataAccess\InterestQueryDA.cs" />
+
     <Compile Include="DataAccess\LearnerDA.cs" />
     <Compile Include="DataAccess\LearnerInterestAnswer.cs" />
     <Compile Include="DataAccess\LearnerSubjectDA.cs" />
     <Compile Include="DataAccess\LookupDA.cs" />
+
     <Compile Include="DataAccess\ReportDA.cs" />
+    <Compile Include="DataAccess\UserAccountDA.cs" />
     <Compile Include="Database1DataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Database1DataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Entity\DegreeInterestMapping.cs" />
     <Compile Include="Entity\ExportReport.cs" />
     <Compile Include="Entity\FundFaculty.cs" />
     <Compile Include="Entity\FundOption.cs" />
     <Compile Include="Entity\FundProgramme.cs" />
     <Compile Include="Entity\GradeLevel.cs" />
+    <Compile Include="Entity\InterestGroup.cs" />
     <Compile Include="Entity\InterestQuery.cs" />
     <Compile Include="Entity\Learner.cs" />
     <Compile Include="Entity\LearnerInterestAnswer.cs" />
     <Compile Include="Entity\LearnerSubject.cs" />
     <Compile Include="Entity\Subject.cs" />
+    <Compile Include="Entity\UserAccount.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,11 +172,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Boundary\AdminDashboardForm.resx">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Boundary\InterestQuestionnaireForm.resx">
       <DependentUpon>InterestQuestionnaireForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\LearnerProfileForm.resx">
       <DependentUpon>LearnerProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\SubjectMarkEntry.resx">
       <DependentUpon>SubjectMarkEntry.cs</DependentUpon>
@@ -210,10 +240,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+
     <Content Include="Database\FuturePath.mdf" />
     <Content Include="Database\FuturePath_log.ldf">
       <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
+
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
