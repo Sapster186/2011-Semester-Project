@@ -53,7 +53,7 @@ namespace _2011__Semester_Project.Boundary
             // TODO: Save learner profile data to your Entity/Controller here before moving on
 
             // Open the Subject and Mark Entry form
-            SubjectMarkEntryForm subjectForm = new SubjectMarkEntryForm();
+            SubjectMarkEntry subjectForm = new SubjectMarkEntry();
             subjectForm.Show();
             this.Hide();
         }
