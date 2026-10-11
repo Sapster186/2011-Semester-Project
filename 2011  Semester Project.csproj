@@ -113,12 +113,17 @@
     <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
       <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controller\Learnercontroller.cs" />
     <Compile Include="Controller\ReportController.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\ExportReportDA.cs" />
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
+    <Compile Include="DataAccess\LearnerDA.cs" />
+    <Compile Include="DataAccess\LearnerInterestAnswer.cs" />
+    <Compile Include="DataAccess\LearnerSubjectDA.cs" />
+    <Compile Include="DataAccess\LookupDA.cs" />
     <Compile Include="DataAccess\ReportDA.cs" />
     <Compile Include="Database1DataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -205,12 +210,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database1.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Database1_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>Database1.mdf</DependentUpon>
+    <Content Include="Database\FuturePath.mdf" />
+    <Content Include="Database\FuturePath_log.ldf">
+      <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>

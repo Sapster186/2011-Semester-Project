@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.dgvQuestions = new System.Windows.Forms.DataGridView();
-            this.database1DataSet = new _2011__Semester_Project.Database1DataSet();
-            this.database1DataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btnNext = new System.Windows.Forms.Button();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.database1DataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.database1DataSet = new _2011__Semester_Project.Database1DataSet();
+            this.btnNext = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.database1DataSetBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvQuestions
@@ -54,25 +54,6 @@
             this.dgvQuestions.RowTemplate.Height = 28;
             this.dgvQuestions.Size = new System.Drawing.Size(700, 309);
             this.dgvQuestions.TabIndex = 0;
-            // 
-            // database1DataSet
-            // 
-            this.database1DataSet.DataSetName = "Database1DataSet";
-            this.database1DataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // database1DataSetBindingSource
-            // 
-            this.database1DataSetBindingSource.DataSource = this.database1DataSet;
-            this.database1DataSetBindingSource.Position = 0;
-            // 
-            // btnNext
-            // 
-            this.btnNext.Location = new System.Drawing.Point(552, 390);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(100, 34);
-            this.btnNext.TabIndex = 1;
-            this.btnNext.Text = "Next";
-            this.btnNext.UseVisualStyleBackColor = true;
             // 
             // Column1
             // 
@@ -95,6 +76,25 @@
             this.Column2.Name = "Column2";
             this.Column2.Width = 150;
             // 
+            // database1DataSetBindingSource
+            // 
+            this.database1DataSetBindingSource.DataSource = this.database1DataSet;
+            this.database1DataSetBindingSource.Position = 0;
+            // 
+            // database1DataSet
+            // 
+            this.database1DataSet.DataSetName = "Database1DataSet";
+            this.database1DataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(552, 390);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(100, 34);
+            this.btnNext.TabIndex = 1;
+            this.btnNext.Text = "Next";
+            this.btnNext.UseVisualStyleBackColor = true;
+            // 
             // InterestQuestionnaireForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -104,9 +104,10 @@
             this.Controls.Add(this.dgvQuestions);
             this.Name = "InterestQuestionnaireForm";
             this.Text = "InterestQuestionnaireForm";
+            this.Load += new System.EventHandler(this.InterestQuestionnaireForm_Load_1);
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.database1DataSetBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).EndInit();
             this.ResumeLayout(false);
 
         }

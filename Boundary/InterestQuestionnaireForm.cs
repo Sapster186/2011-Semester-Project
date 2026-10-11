@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using _2011__Semester_Project.Controller;
+using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.Boundary
 {
@@ -64,14 +66,41 @@ namespace _2011__Semester_Project.Boundary
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            // TODO: Map the answers from dgvQuestions back to your LearnerInterestAnswer Entity/Controller
+            // declare dictionary to store user answers
+            Dictionary<int, string> answers = new Dictionary<int, string>();
 
+            foreach (DataGridViewRow row in dgvQuestions.Rows)
+            {
+                if (row.IsNewRow) continue;
+                if (row.Cells[1].Value == null)
+                {
+                    MessageBox.Show("Please answer every question.");
+                    return;
+                }
+                answers.Add((int)row.Tag, row.Cells[1].Value.ToString());
+            }
+
+            string err = LearnerController.SaveSession(answers);
+            if (err != null)
+            {
+                MessageBox.Show(err, "Could not save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            btnNext.Enabled = false;   // stops a second click saving again
             MessageBox.Show("Learner Profile successfully created and advice session initiated.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
 
-            // Next step in your workflow:
-            // AdvisorySummaryForm summaryForm = new AdvisorySummaryForm();
-            // summaryForm.Show();
-            // this.Hide();
+        private void InterestQuestionnaireForm_Load_1(object sender, EventArgs e)
+        {
+            dgvQuestions.DataSource = null;   
+
+            List<InterestQuery> questions = LearnerController.GetQuestions();
+            foreach (InterestQuery q in questions)
+            {
+                int i = dgvQuestions.Rows.Add(q.QueryText, null);
+                dgvQuestions.Rows[i].Tag = q.QueryID;  
+            }
         }
     }
 }

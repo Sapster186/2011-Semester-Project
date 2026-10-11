@@ -14,6 +14,10 @@ namespace _2011__Semester_Project
         [STAThread]
         static void Main()
         {
+            // instead of bin\Debug, so everyone's app opens the same file Visual Studio shows.
+            AppDomain.CurrentDomain.SetData("DataDirectory",
+                System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\Database")));
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
