@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -79,6 +79,12 @@
     <Compile Include="Boundary\LearnerProfileForm.Designer.cs">
       <DependentUpon>LearnerProfileForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\SubjectMarkEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\SubjectMarkEntry.Designer.cs">
+      <DependentUpon>SubjectMarkEntry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\UserAuth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,11 +114,17 @@
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
     <Compile Include="DataAccess\ReportDA.cs" />
+    <Compile Include="Database1DataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Database1DataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Entity\ExportReport.cs" />
     <Compile Include="Entity\FundFaculty.cs" />
     <Compile Include="Entity\FundOption.cs" />
     <Compile Include="Entity\FundProgramme.cs" />
     <Compile Include="Entity\GradeLevel.cs" />
+    <Compile Include="Entity\InterestQuery.cs" />
     <Compile Include="Entity\Learner.cs" />
     <Compile Include="Entity\LearnerInterestAnswer.cs" />
     <Compile Include="Entity\LearnerSubject.cs" />
@@ -127,6 +139,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Boundary\LearnerProfileForm.resx">
       <DependentUpon>LearnerProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\SubjectMarkEntry.resx">
+      <DependentUpon>SubjectMarkEntry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\UserAuth.resx">
       <DependentUpon>UserAuth.cs</DependentUpon>
@@ -143,6 +158,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Database1DataSet.xsc">
+      <DependentUpon>Database1DataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Database1DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Database1DataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Database1DataSet.xss">
+      <DependentUpon>Database1DataSet.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -170,6 +196,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Database1.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database1_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>Database1.mdf</DependentUpon>
+    </Content>
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
