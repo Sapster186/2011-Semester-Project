@@ -3,7 +3,8 @@ Run Select Script , 2, 16, 11, 63, 5, 10 and 100. should be the result.
 Database should be run in the order of 
 1. Create Table
 2. Create InterestQuestionnaire
-3. Fill Tables
+3. seed_Funding.sql
+5. Fill Tables
 
 Should more tables be created the order will be tweaked, Adjust order as necessary. 
 Delete script for all current tables is 
