@@ -73,6 +73,12 @@
     <Compile Include="Boundary\CareerAdvisorDashboardForm.Designer.cs">
       <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\LearnerProfileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\LearnerProfileForm.Designer.cs">
+      <DependentUpon>LearnerProfileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\UserAuth.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +125,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Boundary\LearnerProfileForm.resx">
+      <DependentUpon>LearnerProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Boundary\UserAuth.resx">
       <DependentUpon>UserAuth.cs</DependentUpon>
     </EmbeddedResource>
