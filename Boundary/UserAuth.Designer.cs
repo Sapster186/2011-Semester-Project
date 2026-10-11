@@ -44,7 +44,7 @@
             this.lblFullName.AutoSize = true;
             this.lblFullName.Location = new System.Drawing.Point(137, 87);
             this.lblFullName.Name = "lblFullName";
-            this.lblFullName.Size = new System.Drawing.Size(87, 20);
+            this.lblFullName.Size = new System.Drawing.Size(73, 16);
             this.lblFullName.TabIndex = 0;
             this.lblFullName.Text = "Username:";
             // 
@@ -53,7 +53,7 @@
             this.lblPassword.AutoSize = true;
             this.lblPassword.Location = new System.Drawing.Point(137, 137);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(82, 20);
+            this.lblPassword.Size = new System.Drawing.Size(70, 16);
             this.lblPassword.TabIndex = 1;
             this.lblPassword.Text = "Password:";
             // 
@@ -62,7 +62,7 @@
             this.lblRole.AutoSize = true;
             this.lblRole.Location = new System.Drawing.Point(137, 197);
             this.lblRole.Name = "lblRole";
-            this.lblRole.Size = new System.Drawing.Size(46, 20);
+            this.lblRole.Size = new System.Drawing.Size(39, 16);
             this.lblRole.TabIndex = 2;
             this.lblRole.Text = "Role:";
             // 
@@ -70,9 +70,9 @@
             // 
             this.lblErrorMsg.AutoSize = true;
             this.lblErrorMsg.ForeColor = System.Drawing.Color.Red;
-            this.lblErrorMsg.Location = new System.Drawing.Point(228, 282);
+            this.lblErrorMsg.Location = new System.Drawing.Point(206, 268);
             this.lblErrorMsg.Name = "lblErrorMsg";
-            this.lblErrorMsg.Size = new System.Drawing.Size(223, 20);
+            this.lblErrorMsg.Size = new System.Drawing.Size(190, 16);
             this.lblErrorMsg.TabIndex = 4;
             this.lblErrorMsg.Text = "Invalid Username or Password";
             // 
@@ -80,7 +80,7 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(251, 137);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(200, 26);
+            this.txtPassword.Size = new System.Drawing.Size(200, 22);
             this.txtPassword.TabIndex = 8;
             this.txtPassword.UseSystemPasswordChar = true;
             // 
@@ -88,7 +88,7 @@
             // 
             this.txtUsername.Location = new System.Drawing.Point(251, 87);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(200, 26);
+            this.txtUsername.Size = new System.Drawing.Size(200, 22);
             this.txtUsername.TabIndex = 9;
             // 
             // btnLogin
@@ -118,7 +118,7 @@
             "Administrator"});
             this.cmbRole.Location = new System.Drawing.Point(251, 189);
             this.cmbRole.Name = "cmbRole";
-            this.cmbRole.Size = new System.Drawing.Size(200, 28);
+            this.cmbRole.Size = new System.Drawing.Size(200, 24);
             this.cmbRole.TabIndex = 12;
             // 
             // UserAuth
