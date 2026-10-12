@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using _2011__Semester_Project.Controller;
+using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.Boundary
 {
@@ -91,19 +93,23 @@ namespace _2011__Semester_Project.Boundary
         
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            string subject = cmbSubject.SelectedItem.ToString();
+            Subject chosen = (Subject)cmbSubject.SelectedItem;
             string mark = txtMark.Text;
 
-            
-            addedSubjects.Add(subject);
-            dgvSubjects.Rows.Add(subject, mark);
+            string err = LearnerController.AddSubjectMark(chosen.subjectID, mark);
+            if (err != null)
+            {
+                lblError.Text = err;
+                lblError.Visible = true;
+                return;
+            }
 
-            // Reset inputs 
+            addedSubjects.Add(chosen.subjectName);
+            dgvSubjects.Rows.Add(chosen.subjectName, mark);
+
             cmbSubject.SelectedIndex = -1;
             txtMark.Clear();
             txtMark.Focus();
-
-            
             btnNext.Enabled = true;
         }
 

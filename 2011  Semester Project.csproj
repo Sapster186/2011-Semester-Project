@@ -121,7 +121,7 @@
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
     <Compile Include="DataAccess\LearnerDA.cs" />
-    <Compile Include="DataAccess\LearnerInterestAnswer.cs" />
+    <Compile Include="DataAccess\LearnerInterestAnswerDA.cs" />
     <Compile Include="DataAccess\LearnerSubjectDA.cs" />
     <Compile Include="DataAccess\LookupDA.cs" />
     <Compile Include="DataAccess\ReportDA.cs" />

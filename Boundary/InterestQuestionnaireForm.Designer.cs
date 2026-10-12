@@ -104,10 +104,7 @@
             this.Controls.Add(this.dgvQuestions);
             this.Name = "InterestQuestionnaireForm";
             this.Text = "InterestQuestionnaireForm";
-            this.Load += new System.EventHandler(this.InterestQuestionnaireForm_Load_1);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.database1DataSetBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).EndInit();
+            this.Load += new System.EventHandler(this.InterestQuestionnaireForm_Load);
             this.ResumeLayout(false);
 
         }

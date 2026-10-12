@@ -23,20 +23,20 @@ namespace _2011__Semester_Project.Boundary
 
         private void LearnerProfileForm_Load(object sender, EventArgs e)
         {
-            
-            cmbGrade.Items.Clear();
-            cmbGrade.Items.AddRange(new string[] { "Grade 11", "Grade 12" });
+            LearnerController.StartNewSession();
 
-            
+            cmbGrade.DataSource = LearnerController.GetGrades();
+            cmbGrade.DisplayMember = "gradeName";
+            cmbGrade.ValueMember = "gradeLevelID";
+            cmbGrade.SelectedIndex = -1;
+
             cmbProvince.Items.Clear();
             cmbProvince.Items.AddRange(new string[] {
-                "Eastern Cape", "Free State", "Gauteng",
-                "KwaZulu-Natal", "Limpopo", "Mpumalanga",
-                "North West", "Northern Cape", "Western Cape"
-            });
+        "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal", "Limpopo",
+        "Mpumalanga", "North West", "Northern Cape", "Western Cape" });
         }
 
-        
+
         private void ValidateRequiredFields(object sender, EventArgs e)
         {
             bool isNameValid = !string.IsNullOrWhiteSpace(txtFullName.Text);
@@ -49,20 +49,13 @@ namespace _2011__Semester_Project.Boundary
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            // Contact details are optional, so a blank value is fine (anonymous session).
-            string err = LearnerController.CaptureProfile(
-                txtFullName.Text,
-                txtSchoolName.Text,
-                (int)cmbGrade.SelectedValue,
-                cmbProvince.Text,
-                txtContact.Text);
-
+            string err = LearnerController.CaptureProfile(txtFullName.Text, txtSchoolName.Text,
+                (int)cmbGrade.SelectedValue, cmbProvince.Text, txtContact.Text);
             if (err != null)
             {
                 MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             SubjectMarkEntry subjectForm = new SubjectMarkEntry();
             subjectForm.Show();
             this.Hide();
