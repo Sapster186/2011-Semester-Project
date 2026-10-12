@@ -97,6 +97,12 @@
     <Compile Include="Boundary\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\ReferenceDataMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\ReferenceDataMaintenanceForm.Designer.cs">
+      <DependentUpon>ReferenceDataMaintenanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\SubjectMarkEntry.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\ReferenceDataMaintenanceForm.resx">
+      <DependentUpon>ReferenceDataMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\SubjectMarkEntry.resx">
       <DependentUpon>SubjectMarkEntry.cs</DependentUpon>
