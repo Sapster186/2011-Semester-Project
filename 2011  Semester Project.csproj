@@ -137,6 +137,7 @@
     <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
       <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controller\AdminController.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\Learnercontroller.cs" />
     <Compile Include="Controller\ReportController.cs" />

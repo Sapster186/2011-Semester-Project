@@ -14,6 +14,12 @@ namespace _2011__Semester_Project.Boundary
 {
     public partial class AddInterestQueryForm : Form
     {
+        private InterestQuery editingQuery = null;
+        public AddInterestQueryForm(InterestQuery existing)
+        {
+            InitializeComponent();
+            editingQuery = existing;
+        }
         public AddInterestQueryForm()
         {
             InitializeComponent();
@@ -25,11 +31,19 @@ namespace _2011__Semester_Project.Boundary
             cmbGroup.DataSource = groupDA.GetAllGroups();
             cmbGroup.DisplayMember = "GroupName";
             cmbGroup.ValueMember = "InterestGroupID";
+
+            // If editing, pre-fill the fields
+            if (editingQuery != null)
+            {
+                this.Text = "Edit Interest Question";
+                txtQuestion.Text = editingQuery.QueryText;
+                txtWeight.Text = editingQuery.Weight.ToString();
+                cmbGroup.SelectedValue = editingQuery.InterestGroupID;
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            // 1. Validate input
             if (string.IsNullOrWhiteSpace(txtQuestion.Text))
             {
                 lblError.Text = "Question text is required.";
@@ -53,19 +67,29 @@ namespace _2011__Semester_Project.Boundary
                 return;
             }
 
-            // 2. Build the entity
-            InterestQuery q = new InterestQuery();
-            q.InterestGroupID = (int)cmbGroup.SelectedValue;
-            q.QueryText = txtQuestion.Text.Trim();
-            q.Weight = weight;
-            q.IsActive = true;
-
-            // 3. Save it
             InterestQueryDA da = new InterestQueryDA();
-            da.AddQuery(q);
 
-            // 4. Confirm and close
-            MessageBox.Show("Question added successfully.", "Success");
+            if (editingQuery == null)
+            {
+                // Adding new
+                InterestQuery q = new InterestQuery();
+                q.InterestGroupID = (int)cmbGroup.SelectedValue;
+                q.QueryText = txtQuestion.Text.Trim();
+                q.Weight = weight;
+                q.IsActive = true;
+                da.AddQuery(q);
+                MessageBox.Show("Question added.", "Success");
+            }
+            else
+            {
+                // Editing existing
+                editingQuery.InterestGroupID = (int)cmbGroup.SelectedValue;
+                editingQuery.QueryText = txtQuestion.Text.Trim();
+                editingQuery.Weight = weight;
+                da.UpdateQuery(editingQuery);
+                MessageBox.Show("Question updated.", "Success");
+            }
+
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
