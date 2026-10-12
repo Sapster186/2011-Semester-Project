@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundary\AddInterestQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\AddInterestQueryForm.Designer.cs">
+      <DependentUpon>AddInterestQueryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\AdminDashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +180,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Boundary\AddInterestQueryForm.resx">
+      <DependentUpon>AddInterestQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Boundary\AdminDashboardForm.resx">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
     </EmbeddedResource>

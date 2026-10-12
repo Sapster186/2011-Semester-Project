@@ -78,6 +78,7 @@
             this.cmbDataType.Name = "cmbDataType";
             this.cmbDataType.Size = new System.Drawing.Size(150, 24);
             this.cmbDataType.TabIndex = 3;
+            this.cmbDataType.SelectedIndexChanged += new System.EventHandler(this.cmbDataType_SelectedIndexChanged);
             // 
             // dgvRecords
             // 
@@ -97,6 +98,7 @@
             this.btnAdd.TabIndex = 5;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnEdit
             // 
@@ -124,6 +126,7 @@
             this.btnRefresh.TabIndex = 8;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // lblStatus
             // 
