@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _2011_Semester_Project.Entity
+namespace _2011__Semester_Project.Entity
 {
     // Holds one row from the DegreeInterestMapping table.
     // Links a degree programme to an interest group with a weight,

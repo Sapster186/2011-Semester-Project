@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _2011_Semester_Project.Entity
+namespace _2011__Semester_Project.Entity
 {
     // Holds one row from the UserAccount table.
     // Represents a login for an Administrator or Career Advisor.

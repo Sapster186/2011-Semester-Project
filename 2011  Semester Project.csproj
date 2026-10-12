@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundary\AddInterestQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\AddInterestQueryForm.Designer.cs">
+      <DependentUpon>AddInterestQueryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\AdminDashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,12 @@
     <Compile Include="Boundary\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\ReferenceDataMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\ReferenceDataMaintenanceForm.Designer.cs">
+      <DependentUpon>ReferenceDataMaintenanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\SubjectMarkEntry.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,7 +137,7 @@
     <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
       <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
-
+    <Compile Include="Controller\AdminController.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\Learnercontroller.cs" />
     <Compile Include="Controller\ReportController.cs" />
@@ -135,15 +147,12 @@
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
-
     <Compile Include="DataAccess\InterestGroupDA.cs" />
     <Compile Include="DataAccess\InterestQueryDA.cs" />
-
     <Compile Include="DataAccess\LearnerDA.cs" />
     <Compile Include="DataAccess\LearnerInterestAnswerDA.cs" />
     <Compile Include="DataAccess\LearnerSubjectDA.cs" />
     <Compile Include="DataAccess\LookupDA.cs" />
-
     <Compile Include="DataAccess\ReportDA.cs" />
     <Compile Include="DataAccess\UserAccountDA.cs" />
     <Compile Include="Database1DataSet.Designer.cs">
@@ -172,6 +181,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Boundary\AddInterestQueryForm.resx">
+      <DependentUpon>AddInterestQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Boundary\AdminDashboardForm.resx">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -183,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\ReferenceDataMaintenanceForm.resx">
+      <DependentUpon>ReferenceDataMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\SubjectMarkEntry.resx">
       <DependentUpon>SubjectMarkEntry.cs</DependentUpon>
@@ -240,12 +255,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-
     <Content Include="Database\FuturePath.mdf" />
     <Content Include="Database\FuturePath_log.ldf">
       <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
-
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

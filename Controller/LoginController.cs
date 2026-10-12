@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using _2011_Semester_Project.Entity;
-using _2011_Semester_Project.DataAccess;
+using _2011__Semester_Project.Entity;
+using _2011__Semester_Project.DataAccess;
 
-namespace _2011_Semester_Project.Controller
+namespace _2011__Semester_Project.Controller
 {
     // The brain behind the login form.
     // Verifies a username + password + role against the UserAccount table.

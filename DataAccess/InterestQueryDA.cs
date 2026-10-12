@@ -1,5 +1,5 @@
 ﻿using _2011__Semester_Project.DataAccess;
-using _2011_Semester_Project.Entity;
+using _2011__Semester_Project.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _2011_Semester_Project.DataAccess
+namespace _2011__Semester_Project.DataAccess
 {
     // The ONLY class allowed to talk to the InterestQuery table directly.
     public class InterestQueryDA
