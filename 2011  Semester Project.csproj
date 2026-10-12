@@ -125,7 +125,6 @@
     <Compile Include="Boundary\ReportSelectionForm.Designer.cs">
       <DependentUpon>ReportSelectionForm.cs</DependentUpon>
     </Compile>
-
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\Learnercontroller.cs" />
     <Compile Include="Controller\ReportController.cs" />
@@ -135,15 +134,12 @@
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
-
     <Compile Include="DataAccess\InterestGroupDA.cs" />
     <Compile Include="DataAccess\InterestQueryDA.cs" />
-
     <Compile Include="DataAccess\LearnerDA.cs" />
     <Compile Include="DataAccess\LearnerInterestAnswer.cs" />
     <Compile Include="DataAccess\LearnerSubjectDA.cs" />
     <Compile Include="DataAccess\LookupDA.cs" />
-
     <Compile Include="DataAccess\ReportDA.cs" />
     <Compile Include="DataAccess\UserAccountDA.cs" />
     <Compile Include="Database1DataSet.Designer.cs">
@@ -240,12 +236,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-
     <Content Include="Database\FuturePath.mdf" />
     <Content Include="Database\FuturePath_log.ldf">
       <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
-
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

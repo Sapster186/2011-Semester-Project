@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _2011_Semester_Project.Entity
+namespace _2011__Semester_Project.Entity
 {
     // Holds one row from the InterestQuery table.
     // Each question belongs to an InterestGroup and has a weight used by the scoring engine.
