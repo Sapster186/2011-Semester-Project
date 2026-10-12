@@ -1,7 +1,9 @@
-﻿using System;
+﻿using _2011_Semester_Project.Controller;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -33,30 +35,36 @@ namespace _2011__Semester_Project.Boundary
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            // 1. Read the inputs from the form.
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
-            string role = cmbRole.SelectedItem?.ToString();
+            string role = cmbRole.SelectedItem == null ? "" : cmbRole.SelectedItem.ToString();
 
-            // Basic validation check
+            // 2. Basic form-level validation first.
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(role))
             {
-
-                lblErrorMsg.Text = "Invalid Username or Password";
+                lblErrorMsg.Text = "Please fill in all fields.";
                 lblErrorMsg.Visible = true;
+                return;
             }
-            else
+
+            // 3. Ask the LoginController to verify.
+            LoginController controller = new LoginController();
+            bool success = controller.Login(username, password, role);
+
+            // 4. If wrong, show the error and stop.
+            if (!success)
             {
-                // Hide error message on successful input
-                lblErrorMsg.Visible = false;
-
-                // TODO: Call your Controller layer here to authenticate against the database
-                MessageBox.Show($"Successfully authenticated as {role}.", "Login Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                // Example of how you will route to the next form:
-                // DashboardForm dashboard = new DashboardForm(role);
-                // dashboard.Show();
-                // this.Hide();
+                lblErrorMsg.Text = "Invalid username or password.";
+                lblErrorMsg.Visible = true;
+                return;
             }
+
+            // 5. Success — open the MainWindow and hide this form.
+            lblErrorMsg.Visible = false;
+            MainWindow main = new MainWindow();  
+            main.Show();
+            this.Hide();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
