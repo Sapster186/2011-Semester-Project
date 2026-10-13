@@ -152,10 +152,75 @@ namespace _2011__Semester_Project.Controller
         }
 
         // Interest alignment. Placeholder for now: neutral 50 until Member A/C's interest DAs are in.
+        // Real interest score: learner answers x question weight x degree mapping weight
         public double CalculateInterestScore(Learner learner, DegreeProgramme degree)
         {
-            // Will be replaced once LearnerInterestAnswerDA and DegreeInterestMappingDA are ready
-            return 50;
+            try
+            {
+                // get the learner's answers
+                LearnerInterestAnswerDA answerDA = new LearnerInterestAnswerDA();
+                List<LearnerInterestAnswer> answers = answerDA.GetByLearner(learner.learnerID);
+
+                if (answers == null || answers.Count == 0) return 0;
+
+                // get all questions (with their group + weight)
+                InterestQueryDA queryDA = new InterestQueryDA();
+                List<InterestQuery> queries = queryDA.GetAllActiveQueries();
+
+                // get the degree's interest mappings
+                DegreeInterestMappingDA mappingDA = new DegreeInterestMappingDA();
+                List<DegreeInterestMapping> mappings = mappingDA.GetMappingsByDegree(degree.degreeID);
+
+                if (mappings == null || mappings.Count == 0) return 0;
+
+                // lookup: queryID -> interestGroupID + weight
+                Dictionary<int, int> queryToGroup = new Dictionary<int, int>();
+                Dictionary<int, double> queryWeight = new Dictionary<int, double>();
+                foreach (InterestQuery q in queries)
+                {
+                    queryToGroup[q.QueryID] = q.InterestGroupID;
+                    queryWeight[q.QueryID] = q.Weight;
+                }
+
+                // lookup: interestGroupID -> mapping weight for this degree
+                Dictionary<int, double> groupToWeight = new Dictionary<int, double>();
+                foreach (DegreeInterestMapping m in mappings)
+                {
+                    groupToWeight[m.InterestGroupID] = m.Weight;
+                }
+
+                double scoreSum = 0;
+                double weightSum = 0;
+
+                // match each answer to the degree's mapped groups
+                foreach (LearnerInterestAnswer a in answers)
+                {
+                    if (!queryToGroup.ContainsKey(a.queryID)) continue;
+
+                    int groupID = queryToGroup[a.queryID];
+                    if (!groupToWeight.ContainsKey(groupID)) continue;
+
+                    double answerValue = 0;
+                    double.TryParse(a.answer, out answerValue);
+
+                    double qWeight = queryWeight[a.queryID];
+                    double mWeight = groupToWeight[groupID];
+
+                    // answer is on a 1-5 scale -> normalise to 0-1
+                    double normalised = answerValue / 5.0;
+
+                    scoreSum += normalised * qWeight * mWeight;
+                    weightSum += qWeight * mWeight;
+                }
+
+                if (weightSum == 0) return 0;
+
+                return (scoreSum / weightSum) * 100;
+            }
+            catch
+            {
+                return 50;   // safe fallback
+            }
         }
 
         // Bonus if the learner's preferred faculty matches this degree's faculty

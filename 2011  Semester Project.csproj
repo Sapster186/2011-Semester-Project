@@ -73,17 +73,35 @@
     <Compile Include="Boundary\AdminDashboardForm.Designer.cs">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\AdvisoryOutcomeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\AdvisoryOutcomeForm.Designer.cs">
+      <DependentUpon>AdvisoryOutcomeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\AdvisorySummaryForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Boundary\AdvisorySummaryForm.Designer.cs">
       <DependentUpon>AdvisorySummaryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Boundary\AlternativeProgramsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\AlternativeProgramsForm.Designer.cs">
+      <DependentUpon>AlternativeProgramsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Boundary\CareerAdvisorDashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Boundary\CareerAdvisorDashboardForm.Designer.cs">
       <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Boundary\FacultyDegreeSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Boundary\FacultyDegreeSelectionForm.Designer.cs">
+      <DependentUpon>FacultyDegreeSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Boundary\InterestQuestionnaireForm.cs">
       <SubType>Form</SubType>
@@ -197,6 +215,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\AdminDashboardForm.resx">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\AdvisoryOutcomeForm.resx">
+      <DependentUpon>AdvisoryOutcomeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\AlternativeProgramsForm.resx">
+      <DependentUpon>AlternativeProgramsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\FacultyDegreeSelectionForm.resx">
+      <DependentUpon>FacultyDegreeSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\InterestQuestionnaireForm.resx">
       <DependentUpon>InterestQuestionnaireForm.cs</DependentUpon>
