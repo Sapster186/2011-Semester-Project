@@ -82,8 +82,9 @@ CREATE TABLE [dbo].[InterestQuery]
 (
 	[queryID] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	[interestGroupID] INT NOT NULL,
-	[queryText] VARCHAR(200) NOT NULL,
+	[questionText] VARCHAR(200) NOT NULL,
 	[weight] FLOAT NOT NULL,
+	[isActive] BIT NOT NULL CONSTRAINT [DF_InterestQuery_isActive] DEFAULT 1,
 	CONSTRAINT [FK_InterestQuery_InterestGroup] FOREIGN KEY ([interestGroupID]) REFERENCES [dbo].[InterestGroup] ([interestGroupID])
 );
 

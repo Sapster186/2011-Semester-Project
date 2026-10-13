@@ -232,113 +232,133 @@ INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isN
 -- Ethan Pillay has no answers on purpose (a learner who has not done the questionnaire yet).
 -- ===========================================================================================
 /* COMMENT START
+
 -- Gadija Jacobs (learnerID 1)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(1, 1, '5'),   -- question 1
-(1, 2, '3'),   -- question 2
-(1, 3, '4'),   -- question 3
-(1, 4, '2'),   -- question 4
-(1, 5, '3'),   -- question 5
-(1, 6, '5'),   -- question 6
-(1, 7, '3'),   -- question 7
-(1, 8, '2');   -- question 8
+(1, 1, '4'),   -- question 1 (Computing)
+(1, 2, '4'),   -- question 2 (Computing)
+(1, 3, '5'),   -- question 3 (Commerce)
+(1, 4, '4'),   -- question 4 (Commerce)
+(1, 5, '1'),   -- question 5 (Health)
+(1, 6, '2'),   -- question 6 (Health)
+(1, 7, '2'),   -- question 7 (Engineering)
+(1, 8, '2'),   -- question 8 (Engineering)
+(1, 9, '3'),   -- question 9 (Humanities)
+(1, 10, '2');   -- question 10 (Humanities)
 
 -- Aadiel-Raboo Magwa (learnerID 2)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(2, 1, '3'),   -- question 1
-(2, 2, '3'),   -- question 2
-(2, 3, '5'),   -- question 3
-(2, 4, '2'),   -- question 4
-(2, 5, '3'),   -- question 5
-(2, 6, '4'),   -- question 6
-(2, 7, '4'),   -- question 7
-(2, 8, '2');   -- question 8
+(2, 1, '5'),   -- question 1 (Computing)
+(2, 2, '5'),   -- question 2 (Computing)
+(2, 3, '3'),   -- question 3 (Commerce)
+(2, 4, '2'),   -- question 4 (Commerce)
+(2, 5, '1'),   -- question 5 (Health)
+(2, 6, '1'),   -- question 6 (Health)
+(2, 7, '3'),   -- question 7 (Engineering)
+(2, 8, '3'),   -- question 8 (Engineering)
+(2, 9, '2'),   -- question 9 (Humanities)
+(2, 10, '2');   -- question 10 (Humanities)
 
 -- Labeeqah Rademeyer (learnerID 3)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(3, 1, '3'),   -- question 1
-(3, 2, '4'),   -- question 2
-(3, 3, '2'),   -- question 3
-(3, 4, '5'),   -- question 4
-(3, 5, '3'),   -- question 5
-(3, 6, '1'),   -- question 6
-(3, 7, '3'),   -- question 7
-(3, 8, '2');   -- question 8
+(3, 1, '2'),   -- question 1 (Computing)
+(3, 2, '2'),   -- question 2 (Computing)
+(3, 3, '1'),   -- question 3 (Commerce)
+(3, 4, '2'),   -- question 4 (Commerce)
+(3, 5, '5'),   -- question 5 (Health)
+(3, 6, '5'),   -- question 6 (Health)
+(3, 7, '3'),   -- question 7 (Engineering)
+(3, 8, '3'),   -- question 8 (Engineering)
+(3, 9, '3'),   -- question 9 (Humanities)
+(3, 10, '3');   -- question 10 (Humanities)
 
 -- Siyabonga Dickson (learnerID 4)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(4, 1, '4'),   -- question 1
-(4, 2, '2'),   -- question 2
-(4, 3, '4'),   -- question 3
-(4, 4, '4'),   -- question 4
-(4, 5, '2'),   -- question 5
-(4, 6, '2'),   -- question 6
-(4, 7, '5'),   -- question 7
-(4, 8, '1');   -- question 8
+(4, 1, '4'),   -- question 1 (Computing)
+(4, 2, '3'),   -- question 2 (Computing)
+(4, 3, '2'),   -- question 3 (Commerce)
+(4, 4, '2'),   -- question 4 (Commerce)
+(4, 5, '1'),   -- question 5 (Health)
+(4, 6, '2'),   -- question 6 (Health)
+(4, 7, '5'),   -- question 7 (Engineering)
+(4, 8, '5'),   -- question 8 (Engineering)
+(4, 9, '2'),   -- question 9 (Humanities)
+(4, 10, '1');   -- question 10 (Humanities)
 
 -- Derek Vin Diesel (learnerID 5)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(5, 1, '1'),   -- question 1
-(5, 2, '4'),   -- question 2
-(5, 3, '2'),   -- question 3
-(5, 4, '2'),   -- question 4
-(5, 5, '5'),   -- question 5
-(5, 6, '2'),   -- question 6
-(5, 7, '3'),   -- question 7
-(5, 8, '5');   -- question 8
+(5, 1, '1'),   -- question 1 (Computing)
+(5, 2, '2'),   -- question 2 (Computing)
+(5, 3, '2'),   -- question 3 (Commerce)
+(5, 4, '2'),   -- question 4 (Commerce)
+(5, 5, '5'),   -- question 5 (Health)
+(5, 6, '4'),   -- question 6 (Health)
+(5, 7, '1'),   -- question 7 (Engineering)
+(5, 8, '2'),   -- question 8 (Engineering)
+(5, 9, '4'),   -- question 9 (Humanities)
+(5, 10, '4');   -- question 10 (Humanities)
 
 -- Nomvula Dlamini (learnerID 6)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(6, 1, '2'),   -- question 1
-(6, 2, '4'),   -- question 2
-(6, 3, '2'),   -- question 3
-(6, 4, '1'),   -- question 4
-(6, 5, '5'),   -- question 5
-(6, 6, '3'),   -- question 6
-(6, 7, '2'),   -- question 7
-(6, 8, '5');   -- question 8
+(6, 1, '1'),   -- question 1 (Computing)
+(6, 2, '2'),   -- question 2 (Computing)
+(6, 3, '3'),   -- question 3 (Commerce)
+(6, 4, '3'),   -- question 4 (Commerce)
+(6, 5, '2'),   -- question 5 (Health)
+(6, 6, '3'),   -- question 6 (Health)
+(6, 7, '1'),   -- question 7 (Engineering)
+(6, 8, '1'),   -- question 8 (Engineering)
+(6, 9, '5'),   -- question 9 (Humanities)
+(6, 10, '4');   -- question 10 (Humanities)
 
 -- Pieter van Wyk (learnerID 7)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(7, 1, '5'),   -- question 1
-(7, 2, '2'),   -- question 2
-(7, 3, '3'),   -- question 3
-(7, 4, '1'),   -- question 4
-(7, 5, '2'),   -- question 5
-(7, 6, '5'),   -- question 6
-(7, 7, '3'),   -- question 7
-(7, 8, '2');   -- question 8
+(7, 1, '3'),   -- question 1 (Computing)
+(7, 2, '3'),   -- question 2 (Computing)
+(7, 3, '4'),   -- question 3 (Commerce)
+(7, 4, '5'),   -- question 4 (Commerce)
+(7, 5, '1'),   -- question 5 (Health)
+(7, 6, '2'),   -- question 6 (Health)
+(7, 7, '2'),   -- question 7 (Engineering)
+(7, 8, '1'),   -- question 8 (Engineering)
+(7, 9, '3'),   -- question 9 (Humanities)
+(7, 10, '2');   -- question 10 (Humanities)
 
 -- Ayesha Khan (learnerID 8)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(8, 1, '5'),   -- question 1
-(8, 2, '2'),   -- question 2
-(8, 3, '5'),   -- question 3
-(8, 4, '4'),   -- question 4
-(8, 5, '2'),   -- question 5
-(8, 6, '3'),   -- question 6
-(8, 7, '4'),   -- question 7
-(8, 8, '1');   -- question 8
+(8, 1, '4'),   -- question 1 (Computing)
+(8, 2, '3'),   -- question 2 (Computing)
+(8, 3, '2'),   -- question 3 (Commerce)
+(8, 4, '2'),   -- question 4 (Commerce)
+(8, 5, '5'),   -- question 5 (Health)
+(8, 6, '4'),   -- question 6 (Health)
+(8, 7, '3'),   -- question 7 (Engineering)
+(8, 8, '4'),   -- question 8 (Engineering)
+(8, 9, '2'),   -- question 9 (Humanities)
+(8, 10, '2');   -- question 10 (Humanities)
 
 -- Sipho Ndlovu (learnerID 9)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(9, 1, '3'),   -- question 1
-(9, 2, '3'),   -- question 2
-(9, 3, '3'),   -- question 3
-(9, 4, '4'),   -- question 4
-(9, 5, '2'),   -- question 5
-(9, 6, '2'),   -- question 6
-(9, 7, '5'),   -- question 7
-(9, 8, '2');   -- question 8
+(9, 1, '3'),   -- question 1 (Computing)
+(9, 2, '3'),   -- question 2 (Computing)
+(9, 3, '2'),   -- question 3 (Commerce)
+(9, 4, '3'),   -- question 4 (Commerce)
+(9, 5, '1'),   -- question 5 (Health)
+(9, 6, '1'),   -- question 6 (Health)
+(9, 7, '5'),   -- question 7 (Engineering)
+(9, 8, '4'),   -- question 8 (Engineering)
+(9, 9, '2'),   -- question 9 (Humanities)
+(9, 10, '2');   -- question 10 (Humanities)
 
 -- Lerato Khumalo (learnerID 10)
 INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
-(10, 1, '1'),   -- question 1
-(10, 2, '5'),   -- question 2
-(10, 3, '2'),   -- question 3
-(10, 4, '2'),   -- question 4
-(10, 5, '5'),   -- question 5
-(10, 6, '2'),   -- question 6
-(10, 7, '3'),   -- question 7
-(10, 8, '4');   -- question 8
-COMMENT END */
+(10, 1, '1'),   -- question 1 (Computing)
+(10, 2, '2'),   -- question 2 (Computing)
+(10, 3, '2'),   -- question 3 (Commerce)
+(10, 4, '2'),   -- question 4 (Commerce)
+(10, 5, '3'),   -- question 5 (Health)
+(10, 6, '3'),   -- question 6 (Health)
+(10, 7, '1'),   -- question 7 (Engineering)
+(10, 8, '2'),   -- question 8 (Engineering)
+(10, 9, '5'),   -- question 9 (Humanities)
+(10, 10, '5');   -- question 10 (Humanities)
