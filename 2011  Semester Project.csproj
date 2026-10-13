@@ -140,10 +140,15 @@
     <Compile Include="Controller\AdminController.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\Learnercontroller.cs" />
+    <Compile Include="Controller\AdviceController.cs" />
     <Compile Include="Controller\ReportController.cs" />
+    <Compile Include="DataAccess\AdviceSessionDA.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
     <Compile Include="DataAccess\DegreeInterestMappingDA.cs" />
+    <Compile Include="DataAccess\DegreeProgrammeDA.cs" />
+    <Compile Include="DataAccess\DegreeRequirementsDA.cs" />
     <Compile Include="DataAccess\ExportReportDA.cs" />
+    <Compile Include="DataAccess\FacultyDA.cs" />
     <Compile Include="DataAccess\FundFacultyDA.cs" />
     <Compile Include="DataAccess\FundOptionDA.cs" />
     <Compile Include="DataAccess\FundProgrammeDA.cs" />
@@ -153,6 +158,7 @@
     <Compile Include="DataAccess\LearnerInterestAnswerDA.cs" />
     <Compile Include="DataAccess\LearnerSubjectDA.cs" />
     <Compile Include="DataAccess\LookupDA.cs" />
+    <Compile Include="DataAccess\RecommendationResultDA.cs" />
     <Compile Include="DataAccess\ReportDA.cs" />
     <Compile Include="DataAccess\UserAccountDA.cs" />
     <Compile Include="Database1DataSet.Designer.cs">
@@ -161,7 +167,11 @@
       <DependentUpon>Database1DataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Entity\DegreeInterestMapping.cs" />
+    <Compile Include="Entity\AdviceSession.cs" />
+    <Compile Include="Entity\DegreeProgramme.cs" />
+    <Compile Include="Entity\DegreeRequirements.cs" />
     <Compile Include="Entity\ExportReport.cs" />
+    <Compile Include="Entity\Faculty.cs" />
     <Compile Include="Entity\FundFaculty.cs" />
     <Compile Include="Entity\FundOption.cs" />
     <Compile Include="Entity\FundProgramme.cs" />
@@ -171,6 +181,7 @@
     <Compile Include="Entity\Learner.cs" />
     <Compile Include="Entity\LearnerInterestAnswer.cs" />
     <Compile Include="Entity\LearnerSubject.cs" />
+    <Compile Include="Entity\RecommendationResult.cs" />
     <Compile Include="Entity\Subject.cs" />
     <Compile Include="Entity\UserAccount.cs" />
     <Compile Include="Form1.cs">
@@ -260,6 +271,13 @@
       <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
     <Content Include="Database\seed_funding.sql" />
+    <Content Include="FuturePathDB.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FuturePathDB_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>FuturePathDB.mdf</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
