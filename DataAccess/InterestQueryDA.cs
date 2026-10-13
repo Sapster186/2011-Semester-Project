@@ -5,7 +5,6 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.DataAccess
 {
-    // The ONLY class allowed to talk to the InterestQuery table directly.
     public class InterestQueryDA
     {
         public List<InterestQuery> GetAllActiveQueries()
