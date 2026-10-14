@@ -57,7 +57,7 @@ namespace _2011__Semester_Project.Boundary
             int gradeId = Convert.ToInt32(cmbGrade.SelectedValue);
 
             string err = LearnerController.CaptureProfile(txtFullName.Text, txtSchoolName.Text,
-                gradeId, cmbProvince.Text, txtContactDetails.Text);
+                gradeId, cmbProvince.Text, txtContact.Text);
             if (err != null)
             {
                 MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
