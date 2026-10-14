@@ -67,5 +67,10 @@ namespace _2011__Semester_Project.Boundary
         {
             this.Close();
         }
+
+        private void degreeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // nothing to do here
+        }
     }
 }
