@@ -84,15 +84,14 @@
             this.btnNext.TabIndex = 6;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // dgvSubjects
             // 
-            this.dgvSubjects.AutoGenerateColumns = false;
             this.dgvSubjects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSubjects.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Subject,
             this.Mark});
-            this.dgvSubjects.DataSource = this.database1DataSetBindingSource;
             this.dgvSubjects.Location = new System.Drawing.Point(12, 72);
             this.dgvSubjects.Name = "dgvSubjects";
             this.dgvSubjects.RowHeadersWidth = 62;
@@ -143,6 +142,7 @@
             this.txtMark.Name = "txtMark";
             this.txtMark.Size = new System.Drawing.Size(100, 26);
             this.txtMark.TabIndex = 10;
+            this.txtMark.TextChanged += new System.EventHandler(this.txtMark_TextChanged);
             // 
             // btnAddSubject
             // 
@@ -153,6 +153,7 @@
             this.btnAddSubject.TabIndex = 11;
             this.btnAddSubject.Text = "Add Subject";
             this.btnAddSubject.UseVisualStyleBackColor = true;
+            this.btnAddSubject.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // cmbSubject
             // 
@@ -160,7 +161,7 @@
             this.cmbSubject.FormattingEnabled = true;
             this.cmbSubject.Location = new System.Drawing.Point(157, 38);
             this.cmbSubject.Name = "cmbSubject";
-            this.cmbSubject.Size = new System.Drawing.Size(121, 28);
+            this.cmbSubject.Size = new System.Drawing.Size(280, 28);
             this.cmbSubject.TabIndex = 12;
             this.cmbSubject.SelectedIndexChanged += new System.EventHandler(this.cmbSubject_SelectedIndexChanged);
             // 

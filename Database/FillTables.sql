@@ -316,7 +316,7 @@ END
 -- ===========================================================================================
 
 -- Gadija Jacobs (learnerID 1)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 1)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 1)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (1, 1, '4'),   -- question 1 (Computing)
@@ -332,7 +332,7 @@ BEGIN
 END
 
 -- Aadiel-Raboo Magwa (learnerID 2)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 2)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 2)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (2, 1, '5'),   -- question 1 (Computing)
@@ -348,7 +348,7 @@ BEGIN
 END
 
 -- Labeeqah Rademeyer (learnerID 3)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 3)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 3)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (3, 1, '2'),   -- question 1 (Computing)
@@ -364,7 +364,7 @@ BEGIN
 END
 
 -- Siyabonga Dickson (learnerID 4)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 4)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 4)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (4, 1, '4'),   -- question 1 (Computing)
@@ -380,7 +380,7 @@ BEGIN
 END
 
 -- Derek Vin Diesel (learnerID 5)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 5)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 5)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (5, 1, '1'),   -- question 1 (Computing)
@@ -396,7 +396,7 @@ BEGIN
 END
 
 -- Nomvula Dlamini (learnerID 6)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 6)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 6)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (6, 1, '1'),   -- question 1 (Computing)
@@ -412,7 +412,7 @@ BEGIN
 END
 
 -- Pieter van Wyk (learnerID 7)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 7)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 7)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (7, 1, '3'),   -- question 1 (Computing)
@@ -428,7 +428,7 @@ BEGIN
 END
 
 -- Ayesha Khan (learnerID 8)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 8)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 8)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (8, 1, '4'),   -- question 1 (Computing)
@@ -444,7 +444,7 @@ BEGIN
 END
 
 -- Sipho Ndlovu (learnerID 9)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 9)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 9)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (9, 1, '3'),   -- question 1 (Computing)
@@ -460,7 +460,7 @@ BEGIN
 END
 
 -- Lerato Khumalo (learnerID 10)
-IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 10)
+IF (SELECT COUNT(*) FROM [dbo].[InterestQuery]) >= 10 AND NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 10)
 BEGIN
     INSERT INTO [dbo].[LearnerInterestAnswer] ([learnerID], [queryID], [answer]) VALUES
     (10, 1, '1'),   -- question 1 (Computing)

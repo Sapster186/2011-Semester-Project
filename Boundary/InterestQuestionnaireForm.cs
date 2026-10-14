@@ -14,6 +14,7 @@ namespace _2011__Semester_Project.Boundary
 {
     public partial class InterestQuestionnaireForm : Form
     {
+        private int questionCount = 0;
         public InterestQuestionnaireForm()
         {
             InitializeComponent();
@@ -25,14 +26,24 @@ namespace _2011__Semester_Project.Boundary
         private void InterestQuestionnaireForm_Load(object sender, EventArgs e)
         {
             dgvQuestions.DataSource = null;
-            foreach (InterestQuery q in LearnerController.GetQuestions())
+            List<InterestQuery> questions = LearnerController.GetQuestions();
+            questionCount = questions.Count;
+
+            if (questionCount == 0)
+            {
+                MessageBox.Show("No interest questions found.");
+                btnNext.Enabled = false;
+                return;
+            }
+            foreach (InterestQuery q in questions)
             {
                 int i = dgvQuestions.Rows.Add(q.QueryText, null);
                 dgvQuestions.Rows[i].Tag = q.QueryID;
             }
+
         }
 
-       
+
         private void dgvQuestions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             ValidateAnswers();
@@ -40,7 +51,7 @@ namespace _2011__Semester_Project.Boundary
 
         private void ValidateAnswers()
         {
-            bool allAnswered = true;
+            bool allAnswered = questionCount > 0;
 
             foreach (DataGridViewRow row in dgvQuestions.Rows)
             {
@@ -82,8 +93,21 @@ namespace _2011__Semester_Project.Boundary
 
             btnNext.Enabled = false;
             MessageBox.Show("Learner Profile successfully created and advice session initiated.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // after the success MessageBox, once Member B's form is ready:
+            int newLearnerId = LearnerController.CurrentLearnerID;
+            // BForm nextForm = new BForm(newLearnerId);
+            // nextForm.MdiParent = this.MdiParent;
+            // nextForm.Show();
+            // this.Hide();
+
+        }
+        private void dgvQuestions_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dgvQuestions.IsCurrentCellDirty)
+                dgvQuestions.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
-        
+
     }
 }

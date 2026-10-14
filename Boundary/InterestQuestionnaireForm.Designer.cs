@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.dgvQuestions = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.database1DataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.database1DataSet = new _2011__Semester_Project.Database1DataSet();
             this.btnNext = new System.Windows.Forms.Button();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.database1DataSetBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).BeginInit();
@@ -42,44 +42,24 @@
             // 
             // dgvQuestions
             // 
-            this.dgvQuestions.AutoGenerateColumns = false;
+            this.dgvQuestions.AllowUserToAddRows = false;
+            this.dgvQuestions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvQuestions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvQuestions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2});
-            this.dgvQuestions.DataSource = this.database1DataSetBindingSource;
             this.dgvQuestions.Location = new System.Drawing.Point(37, 47);
             this.dgvQuestions.Name = "dgvQuestions";
             this.dgvQuestions.RowHeadersWidth = 62;
             this.dgvQuestions.RowTemplate.Height = 28;
-            this.dgvQuestions.Size = new System.Drawing.Size(700, 309);
+            this.dgvQuestions.Size = new System.Drawing.Size(855, 361);
             this.dgvQuestions.TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Question";
-            this.Column1.MinimumWidth = 8;
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 150;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Column2";
-            this.Column2.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.Column2.MinimumWidth = 8;
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 150;
+            this.dgvQuestions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvQuestions_CellValueChanged);
+            this.dgvQuestions.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvQuestions_CurrentCellDirtyStateChanged);
             // 
             // database1DataSetBindingSource
             // 
             this.database1DataSetBindingSource.DataSource = this.database1DataSet;
-            this.database1DataSetBindingSource.Position = 0;
             // 
             // database1DataSet
             // 
@@ -88,23 +68,46 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(552, 390);
+            this.btnNext.Location = new System.Drawing.Point(792, 463);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(100, 34);
             this.btnNext.TabIndex = 1;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Question";
+            this.Column1.MinimumWidth = 8;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Answer(1-5)";
+            this.Column2.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.Column2.MinimumWidth = 8;
+            this.Column2.Name = "Column2";
             // 
             // InterestQuestionnaireForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(965, 543);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.dgvQuestions);
             this.Name = "InterestQuestionnaireForm";
             this.Text = "InterestQuestionnaireForm";
             this.Load += new System.EventHandler(this.InterestQuestionnaireForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.database1DataSetBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.database1DataSet)).EndInit();
             this.ResumeLayout(false);
 
         }

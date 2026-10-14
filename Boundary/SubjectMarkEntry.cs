@@ -39,13 +39,14 @@ namespace _2011__Semester_Project.Boundary
         private void SubjectMarkEntry_Load(object sender, EventArgs e)
         {
             lblError.Visible = false;
+            dgvSubjects.DataSource = null;
+            dgvSubjects.AllowUserToAddRows = false;
 
-            
-            cmbSubject.Items.Clear();
-            cmbSubject.Items.AddRange(new string[] {
-                "Accounting", "English Home Language", "Information Technology",
-                "Life Sciences", "Mathematics", "Mathematical Literacy", "Physical Sciences"
-            });
+            cmbSubject.DataSource = LearnerController.GetSubjects();
+            cmbSubject.DisplayMember = "subjectName";
+            cmbSubject.ValueMember = "subjectID";
+            cmbSubject.SelectedIndex = -1;
+
         }
 
         private void cmbSubject_SelectedIndexChanged(object sender, EventArgs e)
@@ -68,7 +69,10 @@ namespace _2011__Semester_Project.Boundary
             if (cmbSubject.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMark.Text))
                 return;
 
-            string selectedSubject = cmbSubject.SelectedItem.ToString();
+            Subject picked = cmbSubject.SelectedItem as Subject;
+            if (picked == null) return;
+            string selectedSubject = picked.subjectName;
+
 
             // checks for duplicates
             if (addedSubjects.Contains(selectedSubject))
@@ -93,7 +97,9 @@ namespace _2011__Semester_Project.Boundary
         
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            Subject chosen = (Subject)cmbSubject.SelectedItem;
+            Subject chosen = cmbSubject.SelectedItem as Subject;
+            if (chosen == null) return;
+
             string mark = txtMark.Text;
 
             string err = LearnerController.AddSubjectMark(chosen.subjectID, mark);
@@ -116,9 +122,16 @@ namespace _2011__Semester_Project.Boundary
         // Links to next! form
         private void btnNext_Click(object sender, EventArgs e)
         {
+            if (LearnerController.SubjectCount == 0)
+            {
+                MessageBox.Show("Add at least one subject and mark first.");
+                return;
+            }
             InterestQuestionnaireForm nextForm = new InterestQuestionnaireForm();
+            nextForm.MdiParent = this.MdiParent;
             nextForm.Show();
             this.Hide();
+
         }
     }
 }
