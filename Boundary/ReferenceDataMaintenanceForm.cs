@@ -1,173 +1,191 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using _2011__Semester_Project.DataAccess;
+using _2011__Semester_Project.Controller;
 using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.Boundary
 {
     public partial class ReferenceDataMaintenanceForm : Form
     {
+        private readonly AdminController controller = new AdminController();
+        private string DataType { get { return cmbDataType.Text; } }
+
         public ReferenceDataMaintenanceForm()
         {
             InitializeComponent();
+            dgvRecords.ReadOnly = true;
+            dgvRecords.AllowUserToAddRows = false;
+            dgvRecords.AllowUserToDeleteRows = false;
+            dgvRecords.MultiSelect = false;
+            dgvRecords.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
         private void ReferenceDataMaintenanceForm_Load(object sender, EventArgs e)
         {
-            cmbDataType.Items.Add("Degree Programme");
-            cmbDataType.Items.Add("Degree Requirements");
-            cmbDataType.Items.Add("Funding Option");
-            cmbDataType.Items.Add("Interest Questionnaire");
+            if (!CheckAccess()) { Close(); return; }
+            cmbDataType.Items.Clear();
+            cmbDataType.Items.AddRange(new object[] { "Degree Programme", "Degree Requirements", "Funding Option", "Interest Questionnaire" });
+            cmbDataType.Width = 240;
             cmbDataType.SelectedIndex = 0;
-
-            LoadGrid();
         }
 
-        // Loads the grid based on what data type is selected in the combo.
-        private void LoadGrid()
+        private bool CheckAccess()
         {
-            string dataType = cmbDataType.SelectedItem == null ? "" : cmbDataType.SelectedItem.ToString();
+            string error = controller.CheckAdminAccess();
+            if (error == null) return true;
+            ShowStatus(error, true);
+            btnAdd.Enabled = btnEdit.Enabled = btnDeactivate.Enabled = false;
+            return false;
+        }
 
-            if (dataType == "Interest Questionnaire")
+        private void ShowStatus(string text, bool error)
+        {
+            lblStatus.Text = text;
+            lblStatus.ForeColor = error ? Color.Red : Color.DarkGreen;
+        }
+
+        private bool LoadGrid()
+        {
+            dgvRecords.DataSource = null;
+            if (!CheckAccess()) return false;
+            bool editable = DataType == "Funding Option" || DataType == "Interest Questionnaire";
+            btnAdd.Enabled = btnEdit.Enabled = btnDeactivate.Enabled = editable;
+            try
             {
-                InterestQueryDA da = new InterestQueryDA();
-                dgvRecords.DataSource = null;
-                dgvRecords.DataSource = da.GetAllQueries();
-            }
-            else if (dataType == "Funding Option")
-            {
-                FundOptionDA da = new FundOptionDA();
-                dgvRecords.DataSource = null;
-                dgvRecords.DataSource = da.GetActiveFundOptions(); // from Member D's DA
-            }
-            // Degree Programme and Degree Requirements tabs will be added once their DA classes exist
-
-            // Auto-size columns so they fit the data
-            dgvRecords.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-        }
-
-        private void cmbDataType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadGrid();
-            lblStatus.Text = "";
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
-            LoadGrid();
-            lblStatus.Text = "Refreshed.";
-            lblStatus.ForeColor = System.Drawing.Color.Green;
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            string dataType = cmbDataType.SelectedItem == null ? "" : cmbDataType.SelectedItem.ToString();
-
-            if (dataType == "Interest Questionnaire")
-            {
-                AddInterestQueryForm dialog = new AddInterestQueryForm();
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (DataType == "Degree Programme")
                 {
-                    LoadGrid();
-                    lblStatus.Text = "Question added.";
-                    lblStatus.ForeColor = System.Drawing.Color.Green;
+                    dgvRecords.DataSource = controller.GetDegreeProgrammes();
+                    ShowStatus("View only: degree save/deactivate methods are not available yet.", true);
                 }
+                else if (DataType == "Degree Requirements")
+                {
+                    dgvRecords.DataSource = controller.GetDegreeRequirements();
+                    ShowStatus("View only: requirement save methods are not available yet.", true);
+                }
+                else if (DataType == "Funding Option")
+                {
+                    dgvRecords.DataSource = controller.GetFundingOptions();
+                    ShowStatus("Showing active funding with a future closing date.", false);
+                }
+                else
+                {
+                    dgvRecords.DataSource = controller.GetInterestQueries();
+                    ShowStatus("Showing active and inactive questions.", false);
+                }
+                dgvRecords.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                return true;
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Add is not yet wired for: " + dataType);
+                btnAdd.Enabled = btnEdit.Enabled = btnDeactivate.Enabled = false;
+                ShowStatus("Could not load records.", true);
+                MessageBox.Show(ex.Message, "Could not load records");
+                return false;
+            }
+        }
+
+        private void cmbDataType_SelectedIndexChanged(object sender, EventArgs e) { LoadGrid(); }
+        private void btnRefresh_Click(object sender, EventArgs e) { LoadGrid(); }
+        private void btnAdd_Click(object sender, EventArgs e) { EditRecord(false); }
+        private void btnEdit_Click(object sender, EventArgs e) { EditRecord(true); }
+
+        private void EditRecord(bool edit)
+        {
+            if (!CheckAccess()) return;
+            object selected = dgvRecords.CurrentRow == null ? null : dgvRecords.CurrentRow.DataBoundItem;
+            if (edit && selected == null) { MessageBox.Show("Please select a row first."); return; }
+            bool saved = false;
+            if (DataType == "Interest Questionnaire")
+            {
+                using (AddInterestQueryForm dialog = new AddInterestQueryForm(edit ? (InterestQuery)selected : null))
+                    saved = dialog.ShowDialog(this) == DialogResult.OK;
+            }
+            else if (DataType == "Funding Option")
+            {
+                try { saved = EditFundingOption(edit ? (FundOption)selected : null); }
+                catch (Exception ex) { MessageBox.Show(ex.Message, "Could not open funding editor"); }
+            }
+            if (saved)
+            {
+                MessageBox.Show(edit ? "Record updated." : "Record added.", "Saved");
+                LoadGrid();
             }
         }
 
         private void btnDeactivate_Click(object sender, EventArgs e)
         {
-            // 1. Check the user actually selected a row
-            if (dgvRecords.CurrentRow == null)
-            {
-                MessageBox.Show("Please select a row first.", "Nothing selected");
-                return;
-            }
+            if (!CheckAccess()) return;
+            object selected = dgvRecords.CurrentRow == null ? null : dgvRecords.CurrentRow.DataBoundItem;
+            if (selected == null) { MessageBox.Show("Please select a row first."); return; }
+            if (!(selected is InterestQuery) && !(selected is FundOption)) return;
+            if (MessageBox.Show("Are you sure you want to deactivate this item?", "Confirm Deactivate",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
-            string dataType = cmbDataType.SelectedItem == null ? "" : cmbDataType.SelectedItem.ToString();
-
-            // 2. Ask for confirmation
-            DialogResult confirm = MessageBox.Show(
-                "Are you sure you want to deactivate this item? It will no longer appear in learner-facing screens.",
-                "Confirm Deactivate",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
-
-            if (confirm != DialogResult.Yes)
-            {
-                return;
-            }
-
-            try
-            {
-                // 3. Deactivate based on the data type
-                if (dataType == "Interest Questionnaire")
-                {
-                    InterestQuery selected = (InterestQuery)dgvRecords.CurrentRow.DataBoundItem;
-                    InterestQueryDA da = new InterestQueryDA();
-                    da.DeactivateQuery(selected.QueryID);
-                }
-                else if (dataType == "Funding Option")
-                {
-                    // Member D's DA has DeactivateFundOption — call it here
-                    // FundOption selected = (FundOption)dgvRecords.CurrentRow.DataBoundItem;
-                    // FundOptionDA da = new FundOptionDA();
-                    // da.DeactivateFundOption(selected.FundID);
-                    MessageBox.Show("Deactivate for Funding Option coming soon.");
-                    return;
-                }
-                else
-                {
-                    MessageBox.Show("Deactivate not yet wired for: " + dataType);
-                    return;
-                }
-
-                // 4. Refresh + confirm
-                LoadGrid();
-                lblStatus.Text = "Deactivated.";
-                lblStatus.ForeColor = System.Drawing.Color.Green;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            string error = selected is InterestQuery
+                ? controller.DeactivateInterestQuery(((InterestQuery)selected).QueryID)
+                : controller.DeactivateFundingOption(((FundOption)selected).FundID);
+            if (error != null) { MessageBox.Show(error, "Could not deactivate"); return; }
+            MessageBox.Show("Record deactivated.", "Saved");
+            LoadGrid();
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        // Small funding dialog built here so no changes to Member D's forms are needed.
+        private bool EditFundingOption(FundOption existing)
         {
-            if (dgvRecords.CurrentRow == null)
+            using (Form dialog = new Form())
             {
-                MessageBox.Show("Please select a row first.");
-                return;
-            }
+                dialog.Text = existing == null ? "Add Funding Option" : "Edit Funding Option";
+                dialog.ClientSize = new Size(580, 410);
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                dialog.FormBorderStyle = FormBorderStyle.FixedDialog;
+                dialog.MaximizeBox = dialog.MinimizeBox = false;
 
-            string dataType = cmbDataType.SelectedItem == null ? "" : cmbDataType.SelectedItem.ToString();
-
-            if (dataType == "Interest Questionnaire")
-            {
-                InterestQuery selected = (InterestQuery)dgvRecords.CurrentRow.DataBoundItem;
-                AddInterestQueryForm dialog = new AddInterestQueryForm(selected);
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                string[] labels = { "Funding name", "Eligibility", "Documents needed", "Contact details" };
+                string[] values = existing == null ? new string[4] : new string[] {
+                    existing.FundName, existing.EligibleSummary, existing.NecessaryDocs, existing.ContactInformation };
+                TextBox[] inputs = new TextBox[4];
+                for (int i = 0; i < inputs.Length; i++)
                 {
-                    LoadGrid();
-                    lblStatus.Text = "Question updated.";
-                    lblStatus.ForeColor = System.Drawing.Color.Green;
+                    dialog.Controls.Add(new Label { Text = labels[i], Left = 15, Top = 23 + i * 45, Width = 140 });
+                    inputs[i] = new TextBox { Left = 165, Top = 20 + i * 45, Width = 390,
+                        MaxLength = i == 0 ? 100 : 200, Text = values[i] ?? "" };
+                    dialog.Controls.Add(inputs[i]);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Edit not yet wired for: " + dataType);
+                ComboBox type = new ComboBox { Left = 165, Top = 200, Width = 390,
+                    DropDownStyle = ComboBoxStyle.DropDownList, DisplayMember = "fundType", ValueMember = "fundType" };
+                type.DataSource = controller.GetFundingTypes();
+                if (existing != null) type.SelectedValue = existing.FundType;
+                dialog.Controls.Add(new Label { Text = "Funding type", Left = 15, Top = 203, Width = 140 });
+                dialog.Controls.Add(type);
+
+                DateTimePicker closing = new DateTimePicker { Left = 165, Top = 245, Width = 390,
+                    Format = DateTimePickerFormat.Short, MinDate = new DateTime(1753, 1, 1) };
+                closing.Value = existing == null ? DateTime.Today.AddMonths(1) : existing.CloseDate;
+                dialog.Controls.Add(new Label { Text = "Closing date", Left = 15, Top = 248, Width = 140 });
+                dialog.Controls.Add(closing);
+                CheckBox active = new CheckBox { Text = "Active", Left = 165, Top = 285, Checked = existing == null || existing.IsActive };
+                dialog.Controls.Add(active);
+                Button save = new Button { Text = "Save", Left = 365, Top = 345, Width = 90 };
+                Button cancel = new Button { Text = "Cancel", Left = 465, Top = 345, Width = 90, DialogResult = DialogResult.Cancel };
+                dialog.Controls.Add(save);
+                dialog.Controls.Add(cancel);
+                dialog.AcceptButton = save;
+                dialog.CancelButton = cancel;
+                save.Click += delegate
+                {
+                    FundOption option = new FundOption {
+                        FundID = existing == null ? 0 : existing.FundID,
+                        FundName = inputs[0].Text, EligibleSummary = inputs[1].Text,
+                        NecessaryDocs = inputs[2].Text, ContactInformation = inputs[3].Text,
+                        FundType = type.SelectedValue == null ? "" : type.SelectedValue.ToString(),
+                        CloseDate = closing.Value.Date.AddDays(1).AddSeconds(-1), IsActive = active.Checked };
+                    string error = controller.SaveFundingOption(option);
+                    if (error != null) { MessageBox.Show(error, "Check funding details"); return; }
+                    dialog.DialogResult = DialogResult.OK;
+                    dialog.Close();
+                };
+                return dialog.ShowDialog(this) == DialogResult.OK;
             }
         }
     }

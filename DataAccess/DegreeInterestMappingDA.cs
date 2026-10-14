@@ -12,6 +12,7 @@ namespace _2011__Semester_Project.DataAccess
     // The ONLY class allowed to talk to the DegreeInterestMapping table directly.
     public class DegreeInterestMappingDA
     {
+        // SQL uses degreeID; the existing entity property is DegreeProgrammeID.
         // Gets every mapping row.
         public List<DegreeInterestMapping> GetAllMappings()
         {
@@ -29,7 +30,7 @@ namespace _2011__Semester_Project.DataAccess
                 {
                     DegreeInterestMapping m = new DegreeInterestMapping();
                     m.MappingID = (int)reader["mappingID"];
-                    m.DegreeProgrammeID = (int)reader["degreeProgrammeID"];
+                    m.DegreeProgrammeID = (int)reader["degreeID"];
                     m.InterestGroupID = (int)reader["interestGroupID"];
                     m.Weight = Convert.ToSingle(reader["weight"]);
                     results.Add(m);
@@ -48,7 +49,7 @@ namespace _2011__Semester_Project.DataAccess
 
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
-                string query = "SELECT * FROM DegreeInterestMapping WHERE degreeProgrammeID = @degreeProgrammeID";
+                string query = "SELECT * FROM DegreeInterestMapping WHERE degreeID = @degreeProgrammeID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@degreeProgrammeID", degreeProgrammeID);
 
@@ -59,7 +60,7 @@ namespace _2011__Semester_Project.DataAccess
                 {
                     DegreeInterestMapping m = new DegreeInterestMapping();
                     m.MappingID = (int)reader["mappingID"];
-                    m.DegreeProgrammeID = (int)reader["degreeProgrammeID"];
+                    m.DegreeProgrammeID = (int)reader["degreeID"];
                     m.InterestGroupID = (int)reader["interestGroupID"];
                     m.Weight = Convert.ToSingle(reader["weight"]);
                     results.Add(m);
@@ -76,7 +77,7 @@ namespace _2011__Semester_Project.DataAccess
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
-                string query = @"INSERT INTO DegreeInterestMapping (degreeProgrammeID, interestGroupID, weight)
+                string query = @"INSERT INTO DegreeInterestMapping (degreeID, interestGroupID, weight)
                                  VALUES (@degreeProgrammeID, @interestGroupID, @weight)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@degreeProgrammeID", m.DegreeProgrammeID);
@@ -94,7 +95,7 @@ namespace _2011__Semester_Project.DataAccess
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
                 string query = @"UPDATE DegreeInterestMapping SET
-                                 degreeProgrammeID = @degreeProgrammeID,
+                                 degreeID = @degreeProgrammeID,
                                  interestGroupID = @interestGroupID,
                                  weight = @weight
                                  WHERE mappingID = @mappingID";

@@ -1,83 +1,155 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using _2011__Semester_Project.DataAccess;
 using _2011__Semester_Project.Entity;
 
-    namespace _2011__Semester_Project.Controller
+namespace _2011__Semester_Project.Controller
 {
-    // Handles admin-only actions. Refuses anything if the logged-in
-    // user is not an Administrator. Called by the maintenance forms.
     public class AdminController
     {
-        // Checks whether the current logged-in user is an Administrator.
-        // This is the double-check required by test case 10 —
-        // even if the form lies, the controller refuses.
         public bool IsAdministrator()
         {
-            return LoginController.CurrentUserRole == "Administrator";
+            return LoginController.CurrentUserRole == "Administrator" &&
+                !string.IsNullOrWhiteSpace(LoginController.CurrentUsername);
         }
 
-        // Called by any admin maintenance action before it runs.
-        // Returns null if allowed, or an error message if refused.
         public string CheckAdminAccess()
         {
-            if (!IsAdministrator())
-            {
-                return "Access denied. Only Administrators may maintain reference data.";
-            }
-            return null;
+            return IsAdministrator() ? null : "Access denied. Only Administrators may maintain reference data.";
         }
 
-        // ---- Interest Questionnaire ----
+        private void RequireAdministrator()
+        {
+            string error = CheckAdminAccess();
+            if (error != null) throw new UnauthorizedAccessException(error);
+        }
+
+        // Reads are protected too. Forms never call DataAccess directly.
+        public List<DegreeProgramme> GetDegreeProgrammes()
+        {
+            RequireAdministrator();
+            return new DegreeProgrammeDA().GetAllActiveDegrees();
+        }
+
+        public List<DegreeRequirements> GetDegreeRequirements()
+        {
+            RequireAdministrator();
+            return new DegreeRequirementsDA().GetAllRequirements();
+        }
+
+        public List<FundOption> GetFundingOptions()
+        {
+            RequireAdministrator();
+            return new FundOptionDA().GetActiveFundOptions();
+        }
+
+        public DataTable GetFundingTypes()
+        {
+            RequireAdministrator();
+            return new ReportDA().GetFundTypes();
+        }
+
+        public List<InterestQuery> GetInterestQueries()
+        {
+            RequireAdministrator();
+            return new InterestQueryDA().GetAllQueries();
+        }
+
+        public List<InterestGroup> GetInterestGroups()
+        {
+            RequireAdministrator();
+            return new InterestGroupDA().GetAllGroups();
+        }
 
         public string AddInterestQuery(int groupID, string questionText, float weight)
         {
-            string check = CheckAdminAccess();
-            if (check != null) return check;
+            return SaveInterestQuery(new InterestQuery(0, groupID, questionText, weight, true));
+        }
 
-            if (string.IsNullOrWhiteSpace(questionText)) return "Question text is required.";
-            if (weight <= 0) return "Weight must be greater than 0.";
-
-            InterestQuery q = new InterestQuery();
-            q.InterestGroupID = groupID;
-            q.QueryText = questionText.Trim();
-            q.Weight = weight;
-            q.IsActive = true;
+        public string SaveInterestQuery(InterestQuery question)
+        {
+            string error = CheckAdminAccess();
+            if (error != null) return error;
+            if (question == null) return "Question is required.";
+            if (question.QueryID < 0) return "Invalid question ID.";
+            if (question.InterestGroupID <= 0) return "Please select an interest group.";
+            if (string.IsNullOrWhiteSpace(question.QueryText) || question.QueryText.Trim().Length > 200)
+                return "Question text is required and must be at most 200 characters.";
+            if (float.IsNaN(question.Weight) || float.IsInfinity(question.Weight) || question.Weight <= 0)
+                return "Weight must be a finite number greater than 0.";
 
             try
             {
+                if (new InterestGroupDA().GetGroupByID(question.InterestGroupID) == null)
+                    return "The selected interest group no longer exists.";
+                question.QueryText = question.QueryText.Trim();
                 InterestQueryDA da = new InterestQueryDA();
-                da.AddQuery(q);
+                if (question.QueryID == 0) da.AddQuery(question);
+                else da.UpdateQuery(question);
                 return null;
             }
-            catch (Exception ex)
-            {
-                return "Could not save: " + ex.Message;
-            }
+            catch (Exception ex) { return "Could not save the question: " + ex.Message; }
         }
 
         public string DeactivateInterestQuery(int queryID)
         {
-            string check = CheckAdminAccess();
-            if (check != null) return check;
+            string error = CheckAdminAccess();
+            if (error != null) return error;
+            if (queryID <= 0) return "Please select a question.";
+            try
+            {
+                new InterestQueryDA().DeactivateQuery(queryID);
+                return null;
+            }
+            catch (Exception ex) { return "Could not deactivate the question: " + ex.Message; }
+        }
+
+        public string SaveFundingOption(FundOption option)
+        {
+            string error = CheckAdminAccess();
+            if (error != null) return error;
+            if (option == null) return "Funding option is required.";
+            if (option.FundID < 0) return "Invalid funding ID.";
+            if (string.IsNullOrWhiteSpace(option.FundName) || option.FundName.Trim().Length > 100)
+                return "Funding name is required and must be at most 100 characters.";
+            if (string.IsNullOrWhiteSpace(option.FundType) || option.FundType.Length > 50)
+                return "Please select a funding type.";
+            if ((option.EligibleSummary ?? "").Length > 200 || (option.NecessaryDocs ?? "").Length > 200 ||
+                (option.ContactInformation ?? "").Length > 200)
+                return "Eligibility, documents and contact details must each be at most 200 characters.";
+            if (option.CloseDate < new DateTime(1753, 1, 1)) return "Please select a valid closing date.";
 
             try
             {
-                InterestQueryDA da = new InterestQueryDA();
-                da.DeactivateQuery(queryID);
+                bool validType = false;
+                foreach (DataRow row in GetFundingTypes().Rows)
+                    if (row["fundType"].ToString() == option.FundType) validType = true;
+                if (!validType) return "Please select an existing funding type.";
+
+                option.FundName = option.FundName.Trim();
+                option.EligibleSummary = option.EligibleSummary ?? "";
+                option.NecessaryDocs = option.NecessaryDocs ?? "";
+                option.ContactInformation = option.ContactInformation ?? "";
+                FundOptionDA da = new FundOptionDA();
+                if (option.FundID == 0) da.AddFundOption(option);
+                else da.UpdateFundOption(option);
                 return null;
             }
-            catch (Exception ex)
-            {
-                return "Could not deactivate: " + ex.Message;
-            }
+            catch (Exception ex) { return "Could not save the funding option: " + ex.Message; }
         }
 
-        // ---- Degree Programmes (wired later, once DA exists) ----
-
-        // TODO: Add methods once Member B pushes DegreeProgrammeDA and DegreeRequirementsDA
-
-        // ---- Funding Options (wired once we confirm Member D's DA method names) ----
-
-        // TODO: Add methods once we confirm FundOptionDA method names
+        public string DeactivateFundingOption(int fundID)
+        {
+            string error = CheckAdminAccess();
+            if (error != null) return error;
+            if (fundID <= 0) return "Please select a funding option.";
+            try
+            {
+                new FundOptionDA().DeactivateFundOption(fundID);
+                return null;
+            }
+            catch (Exception ex) { return "Could not deactivate the funding option: " + ex.Message; }
+        }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using _2011__Semester_Project.Entity;
@@ -22,9 +22,9 @@ namespace _2011__Semester_Project.DataAccess
                 while (reader.Read())
                 {
                     InterestQuery q = new InterestQuery();
-                    q.QueryID = (int)reader["interestQueryID"];
+                    q.QueryID = (int)reader["queryID"];
                     q.InterestGroupID = (int)reader["interestGroupID"];
-                    q.QueryText = reader["queryText"].ToString();
+                    q.QueryText = reader["questionText"].ToString();
                     q.Weight = Convert.ToSingle(reader["weight"]);
                     q.IsActive = (bool)reader["isActive"];
                     results.Add(q);
@@ -51,9 +51,9 @@ namespace _2011__Semester_Project.DataAccess
                 while (reader.Read())
                 {
                     InterestQuery q = new InterestQuery();
-                    q.QueryID = (int)reader["interestQueryID"];
+                    q.QueryID = (int)reader["queryID"];
                     q.InterestGroupID = (int)reader["interestGroupID"];
-                    q.QueryText = reader["queryText"].ToString();
+                    q.QueryText = reader["questionText"].ToString();
                     q.Weight = Convert.ToSingle(reader["weight"]);
                     q.IsActive = (bool)reader["isActive"];
                     results.Add(q);
@@ -69,11 +69,11 @@ namespace _2011__Semester_Project.DataAccess
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
-                string query = @"INSERT INTO InterestQuery (interestGroupID, queryText, weight, isActive)
-                                 VALUES (@interestGroupID, @queryText, @weight, @isActive)";
+                string query = @"INSERT INTO InterestQuery (interestGroupID, questionText, weight, isActive)
+                                 VALUES (@interestGroupID, @questionText, @weight, @isActive)";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@interestGroupID", q.InterestGroupID);
-                cmd.Parameters.AddWithValue("@queryText", q.QueryText);
+                cmd.Parameters.AddWithValue("@questionText", q.QueryText);
                 cmd.Parameters.AddWithValue("@weight", q.Weight);
                 cmd.Parameters.AddWithValue("@isActive", q.IsActive);
 
@@ -88,14 +88,14 @@ namespace _2011__Semester_Project.DataAccess
             {
                 string query = @"UPDATE InterestQuery SET
                                  interestGroupID = @interestGroupID,
-                                 queryText = @queryText,
+                                 questionText = @questionText,
                                  weight = @weight,
                                  isActive = @isActive
-                                 WHERE interestQueryID = @interestQueryID";
+                                 WHERE queryID = @queryID";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@interestQueryID", q.QueryID);
+                cmd.Parameters.AddWithValue("@queryID", q.QueryID);
                 cmd.Parameters.AddWithValue("@interestGroupID", q.InterestGroupID);
-                cmd.Parameters.AddWithValue("@queryText", q.QueryText);
+                cmd.Parameters.AddWithValue("@questionText", q.QueryText);
                 cmd.Parameters.AddWithValue("@weight", q.Weight);
                 cmd.Parameters.AddWithValue("@isActive", q.IsActive);
 
@@ -108,7 +108,7 @@ namespace _2011__Semester_Project.DataAccess
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
-                string query = "UPDATE InterestQuery SET isActive = 0 WHERE interestQueryID = @queryID";
+                string query = "UPDATE InterestQuery SET isActive = 0 WHERE queryID = @queryID";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@queryID", queryID);
 
