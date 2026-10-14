@@ -115,10 +115,7 @@ namespace _2011__Semester_Project.Boundary
 
         }
 
-        private void degreeComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         #endregion
 

@@ -293,18 +293,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\FuturePath.mdf" />
-    <Content Include="Database\FuturePath_log.ldf">
-      <DependentUpon>FuturePath.mdf</DependentUpon>
-    </Content>
+ <Content Include="FuturePathDB.mdf">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+</Content>
+<Content Include="FuturePathDB_log.ldf">
+  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  <DependentUpon>FuturePathDB.mdf</DependentUpon>
+</Content>
     <Content Include="Database\seed_funding.sql" />
-    <Content Include="FuturePathDB.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FuturePathDB_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>FuturePathDB.mdf</DependentUpon>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -109,11 +109,16 @@ namespace _2011__Semester_Project.Boundary
             
             // If learner is logged in, use their ID
             // For now, hardcode a learner (or ask for login first)
-            int learnerID = 1;   // Gadija
+            int learnerID = 5;   // Gadija
 
             FacultyDegreeSelectionForm form = new FacultyDegreeSelectionForm(learnerID);
             form.MdiParent = this;
             form.Show();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
     }
