@@ -37,7 +37,6 @@ namespace _2011__Semester_Project.Boundary
         {
             try
             {
-                // load everything we need
                 Learner learner = learnerDA.GetById(learnerID);
                 List<LearnerSubject> subjects = subjectDA.GetByLearner(learnerID);
                 DegreeProgramme degree = degreeDA.GetDegreeByID(degreeID);
@@ -51,26 +50,40 @@ namespace _2011__Semester_Project.Boundary
 
                 facultyID = degree.facultyID;
 
-                // run the engine
                 string gap;
                 double subjectScore, markScore, interestScore, facultyScore;
                 AdviceSession session = adviceController.CheckEligibilityWithGap(
                     learner, subjects, degree, reqs,
                     out gap, out subjectScore, out markScore, out interestScore, out facultyScore);
 
-                // save the session + recommendations
                 sessionID = adviceController.SaveSession(session);
 
-                List<RecommendationResult> recs = adviceController.GenerateRecommendations(
-                    learner, subjects, new List<DegreeProgramme> { degree }, reqs);
-
-                foreach (RecommendationResult r in recs)
+                if (session.eligibleResult == AdviceController.STRONG_MATCH
+                    || session.eligibleResult == AdviceController.POSSIBLE_MATCH)
                 {
-                    r.sessionID = sessionID;
-                    adviceController.SaveRecommendations(new List<RecommendationResult> { r });
+                    RecommendationResult chosen = new RecommendationResult();
+                    chosen.sessionID = sessionID;
+                    chosen.degreeID = degreeID;
+                    chosen.overallScore = session.overallScore;
+                    chosen.isAlternative = false;
+                    chosen.gapObservation = gap;
+                    adviceController.SaveRecommendations(new List<RecommendationResult> { chosen });
+                }
+                else
+                {
+                    List<DegreeProgramme> allDegrees = degreeDA.GetAllActiveDegrees();
+                    List<DegreeRequirements> allReqs = reqDA.GetAllRequirements();
+
+                    List<RecommendationResult> recs = adviceController.GenerateRecommendations(
+                        learner, subjects, allDegrees, allReqs);
+
+                    foreach (RecommendationResult r in recs)
+                    {
+                        r.sessionID = sessionID;
+                        adviceController.SaveRecommendations(new List<RecommendationResult> { r });
+                    }
                 }
 
-                // show the result
                 outcomeLbl.Text = session.eligibleResult;
                 gapLbl.Text = string.IsNullOrEmpty(gap)
                     ? "You meet the requirements for this degree."
@@ -82,7 +95,6 @@ namespace _2011__Semester_Project.Boundary
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-
         private void alternativesButton_Click(object sender, EventArgs e)
         {
             AlternativeProgramsForm alt = new AlternativeProgramsForm(learnerID, sessionID);

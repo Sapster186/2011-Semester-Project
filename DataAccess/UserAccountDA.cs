@@ -31,7 +31,7 @@ namespace _2011__Semester_Project.DataAccess
                 if (reader.Read())
                 {
                     user = new UserAccount();
-                    user.UserAccountID = (int)reader["userAccountID"];
+                    user.UserAccountID = (int)reader["userID"];
                     user.UserName = reader["userName"].ToString();
                     user.PassHash = reader["passHash"].ToString();
                     user.Role = reader["role"].ToString();
