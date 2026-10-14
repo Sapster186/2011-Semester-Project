@@ -103,5 +103,18 @@ namespace _2011__Semester_Project.Boundary
                 mnuReports.Visible = true;
             }
         }
+
+        private void checkEligibilityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            // If learner is logged in, use their ID
+            // For now, hardcode a learner (or ask for login first)
+            int learnerID = 1;   // Gadija
+
+            FacultyDegreeSelectionForm form = new FacultyDegreeSelectionForm(learnerID);
+            form.MdiParent = this;
+            form.Show();
+        }
     }
-}
+    }
+

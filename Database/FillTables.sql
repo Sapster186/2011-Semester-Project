@@ -182,6 +182,139 @@ BEGIN
     (11, 13, 72);   -- Life Orientation
 END
 
+-- ===========================================================================================
+-- MEMBER B: Faculty, DegreeProgramme, DegreeRequirements
+-- These power the recommendation engine (AdviceController).
+-- Requirements are tuned so the 5 named learners get their Part B outcomes:
+--   Gadija   -> Strong Match     (BCom Information Systems, degreeID 1)
+--   Aadiel   -> Not Eligible     (BSc Computer Science, degreeID 4, missing Maths)
+--   Labeeqah -> Possible Match   (BSc Biological Sciences, degreeID 5, Maths 58% < 60%)
+--   Siyabonga-> Strong Match     (BSc Engineering Mech, degreeID 6)
+--   Derek    -> Not Eligible     (Bachelor of Health Sciences, degreeID 10, missing Maths + Phys Sci)
+-- ===========================================================================================
+
+-- Faculty (1=Commerce, 2=Humanities, 3=Science, 4=Engineering, 5=Health Sciences)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[Faculty])
+BEGIN
+INSERT INTO [dbo].[Faculty] ([facultyName], [facultyDesc]) VALUES
+('Commerce', 'Faculty of Commerce'),
+('Humanities', 'Faculty of Humanities'),
+('Science', 'Faculty of Science'),
+('Engineering', 'Faculty of Engineering and the Built Environment'),
+('Health Sciences', 'Faculty of Health Sciences');
+END
+
+-- DegreeProgramme (1=BCom IS, 2=BCom Acc, 3=BCom Gen, 4=BSc CS, 5=BSc Bio,
+--                  6=BSc Eng Mech, 7=BA Hum, 8=BSocSci, 9=LLB, 10=BHS)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeProgramme])
+BEGIN
+INSERT INTO [dbo].[DegreeProgramme] ([facultyID], [degreeName], [minOverallAverage], [isActive]) VALUES
+(1, 'BCom Information Systems', 60, 1),
+(1, 'BCom Accounting', 65, 1),
+(1, 'BCom General', 55, 1),
+(3, 'BSc Computer Science', 70, 1),
+(3, 'BSc Biological Sciences', 60, 1),
+(4, 'BSc Engineering (Mechanical)', 70, 1),
+(2, 'BA Humanities', 55, 1),
+(2, 'BSocSci', 60, 1),
+(2, 'LLB Law', 70, 1),
+(5, 'Bachelor of Health Sciences', 70, 1);
+END
+
+-- DegreeRequirements
+-- BCom Information Systems (degreeID 1) - Gadija: Strong Match
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 1)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(1, 1, 60, 1, 0, 'English 60% required'),
+(1, 3, 60, 1, 0, 'Mathematics 60% required'),
+(1, 7, 60, 1, 0, 'Accounting 60% required');
+END
+
+-- BCom Accounting (degreeID 2)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 2)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(2, 1, 60, 1, 0, 'English 60% required'),
+(2, 3, 65, 1, 0, 'Mathematics 65% required'),
+(2, 7, 65, 1, 0, 'Accounting 65% required');
+END
+
+-- BCom General (degreeID 3) - Maths OR Maths Lit
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 3)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(3, 1, 55, 1, 0, 'English 55% required'),
+(3, 3, 55, 0, 1, 'Mathematics accepted'),
+(3, 4, 55, 0, 1, 'Maths Literacy accepted');
+END
+
+-- BSc Computer Science (degreeID 4) - Aadiel: Not Eligible (has Maths Lit, not Maths)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 4)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(4, 1, 60, 1, 0, 'English 60% required'),
+(4, 3, 70, 1, 0, 'Mathematics 70% required (Maths Lit not accepted)');
+END
+
+-- BSc Biological Sciences (degreeID 5) - Labeeqah: Possible Match (Maths 58% < 60%)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 5)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(5, 1, 60, 1, 0, 'English 60% required'),
+(5, 3, 60, 1, 0, 'Mathematics 60% required'),
+(5, 5, 60, 1, 0, 'Physical Sciences 60% required');
+END
+
+-- BSc Engineering Mechanical (degreeID 6) - Siyabonga: Strong Match
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 6)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(6, 1, 60, 1, 0, 'English 60% required'),
+(6, 3, 70, 1, 0, 'Mathematics 70% required'),
+(6, 5, 70, 1, 0, 'Physical Sciences 70% required');
+END
+
+-- BA Humanities (degreeID 7)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 7)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(7, 1, 55, 1, 0, 'English 55% required');
+END
+
+-- BSocSci (degreeID 8) - Maths OR Maths Lit
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 8)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(8, 1, 60, 1, 0, 'English 60% required'),
+(8, 3, 55, 0, 1, 'Mathematics accepted'),
+(8, 4, 55, 0, 1, 'Maths Literacy accepted');
+END
+
+-- LLB Law (degreeID 9)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 9)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(9, 1, 70, 1, 0, 'English 70% required'),
+(9, 11, 60, 0, 1, 'History is helpful');
+END
+
+-- Bachelor of Health Sciences (degreeID 10) - Derek: Not Eligible (missing Maths + Phys Sci)
+IF NOT EXISTS (SELECT 1 FROM [dbo].[DegreeRequirements] WHERE [degreeID] = 10)
+BEGIN
+INSERT INTO [dbo].[DegreeRequirements] ([degreeID], [subjectID], [minMark], [isNeeded], [isAlternative], [adviceNote]) VALUES
+(10, 1, 60, 1, 0, 'English 60% required'),
+(10, 3, 60, 1, 0, 'Mathematics 60% required'),
+(10, 5, 60, 1, 0, 'Physical Sciences 60% required');
+END
+
+-- ===========================================================================================
+-- LearnerInterestAnswer (Member A). Member C's 10 questions must already be loaded,
+-- so queryID 1 to 10 exist in InterestQuery (check: SELECT * FROM [dbo].[InterestQuery] ORDER BY queryID).
+-- Answers are on a 1-5 scale (1 = strongly disagree, 5 = strongly agree).
+-- Ethan Pillay has no answers on purpose (a learner who has not done the questionnaire yet).
+-- ===========================================================================================
+
 -- Gadija Jacobs (learnerID 1)
 IF NOT EXISTS (SELECT 1 FROM [dbo].[LearnerInterestAnswer] WHERE [learnerID] = 1)
 BEGIN
