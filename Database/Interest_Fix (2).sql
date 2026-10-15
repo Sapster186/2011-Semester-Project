@@ -11,7 +11,7 @@ EXEC sp_rename 'dbo.InterestQuery.queryID', 'interestQueryID', 'COLUMN';
 
 -- 3. Degree to interest group mappings
 -- Groups: 1 Computing, 2 Commerce, 3 Health, 4 Engineering, 5 Humanities
-INSERT INTO DegreeInterestMapping (degreeProgrammeID, interestGroupID, weight) VALUES
+INSERT INTO DegreeInterestMapping (degreeID, interestGroupID, weight) VALUES
 (1, 1, 1.0),   -- BCom Information Systems -> Computing
 (1, 2, 0.8),   -- BCom Information Systems -> Commerce
 (2, 2, 1.0),   -- BCom Accounting -> Commerce
