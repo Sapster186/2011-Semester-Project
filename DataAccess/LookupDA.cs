@@ -75,7 +75,8 @@ namespace _2011__Semester_Project.DataAccess
 
             try
             {
-                string sql = "SELECT [interestQueryID],[interestGroupID],[queryText],[weight] FROM [dbo].[InterestQuery] WHERE [isActive]=1 ORDER BY [interestQueryID]";
+                string sql = "SELECT [queryID],[interestGroupID],[questionText],[weight] FROM [dbo].[InterestQuery] WHERE [isActive]=1 ORDER BY [queryID]";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 conn.Open();
