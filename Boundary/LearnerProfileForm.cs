@@ -49,16 +49,26 @@ namespace _2011__Semester_Project.Boundary
 
         private void btnNext_Click(object sender, EventArgs e)
         {
+            if (cmbGrade.SelectedValue == null)
+            {
+                MessageBox.Show("Please select a grade.");
+                return;
+            }
+            int gradeId = Convert.ToInt32(cmbGrade.SelectedValue);
+
             string err = LearnerController.CaptureProfile(txtFullName.Text, txtSchoolName.Text,
-                (int)cmbGrade.SelectedValue, cmbProvince.Text, txtContact.Text);
+                gradeId, cmbProvince.Text, txtContact.Text);
             if (err != null)
             {
                 MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
             SubjectMarkEntry subjectForm = new SubjectMarkEntry();
+            subjectForm.MdiParent = this.MdiParent;
             subjectForm.Show();
             this.Hide();
+
         }
     }
 }
