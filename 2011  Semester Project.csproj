@@ -294,6 +294,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\Interest_Fix %282%29.sql" />
+
     <Content Include="FuturePath.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
