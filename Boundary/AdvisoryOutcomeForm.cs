@@ -64,6 +64,10 @@ namespace _2011__Semester_Project.Boundary
                     RecommendationResult chosen = new RecommendationResult();
                     chosen.sessionID = sessionID;
                     chosen.degreeID = degreeID;
+                    chosen.subjectMatchScore = subjectScore;
+                    chosen.markMatchScore = markScore;
+                    chosen.interestMatchScore = interestScore;
+                    chosen.desiredFacultyScore = facultyScore;
                     chosen.overallScore = session.overallScore;
                     chosen.isAlternative = false;
                     chosen.gapObservation = gap;
