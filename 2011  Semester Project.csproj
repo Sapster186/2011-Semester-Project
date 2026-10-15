@@ -294,12 +294,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\Interest_Fix %282%29.sql" />
-    <Content Include="FuturePathDB.mdf">
+    <Content Include="FuturePath.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="FuturePathDB_log.ldf">
+    <Content Include="FuturePath_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>FuturePathDB.mdf</DependentUpon>
+      <DependentUpon>FuturePath.mdf</DependentUpon>
     </Content>
     <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
