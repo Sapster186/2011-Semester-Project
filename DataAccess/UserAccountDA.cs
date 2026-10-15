@@ -61,7 +61,7 @@ namespace _2011__Semester_Project.DataAccess
                 while (reader.Read())
                 {
                     UserAccount user = new UserAccount();
-                    user.UserAccountID = (int)reader["userAccountID"];
+                    user.UserAccountID = (int)reader["userID"];
                     user.UserName = reader["userName"].ToString();
                     user.PassHash = reader["passHash"].ToString();
                     user.Role = reader["role"].ToString();
@@ -103,9 +103,9 @@ namespace _2011__Semester_Project.DataAccess
                                  passHash = @passHash,
                                  role = @role,
                                  isActive = @isActive
-                                 WHERE userAccountID = @userAccountID";
+                                 WHERE userID = @userID";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@userAccountID", user.UserAccountID);
+                cmd.Parameters.AddWithValue("@userID", user.UserAccountID);
                 cmd.Parameters.AddWithValue("@userName", user.UserName);
                 cmd.Parameters.AddWithValue("@passHash", user.PassHash);
                 cmd.Parameters.AddWithValue("@role", user.Role);
@@ -118,13 +118,13 @@ namespace _2011__Semester_Project.DataAccess
 
         // Deactivates a user instead of deleting them.
         // Soft delete — keeps history intact.
-        public void DeactivateUser(int userAccountID)
+        public void DeactivateUser(int userID)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
             {
-                string query = "UPDATE UserAccount SET isActive = 0 WHERE userAccountID = @userAccountID";
+                string query = "UPDATE UserAccount SET isActive = 0 WHERE userID = @userID";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@userAccountID", userAccountID);
+                cmd.Parameters.AddWithValue("@userID", userID);
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
