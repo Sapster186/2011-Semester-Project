@@ -1,14 +1,6 @@
-﻿using _2011__Semester_Project.Controller;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
+using _2011__Semester_Project.Controller;
 
 namespace _2011__Semester_Project.Boundary
 {
@@ -17,59 +9,78 @@ namespace _2011__Semester_Project.Boundary
         public UserAuth()
         {
             InitializeComponent();
+            cmbRole.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbRole.SelectedIndexChanged += UpdateLoginInputs;
+            txtUsername.TextChanged += UpdateLoginInputs;
+            txtPassword.TextChanged += UpdateLoginInputs;
+            btnExit.Click += btnExit_Click;
+            AcceptButton = btnLogin;
         }
 
         private void UserAuth_Load(object sender, EventArgs e)
         {
-            // Hide the error message by default when the form loads
             lblErrorMsg.Visible = false;
+            UpdateLoginInputs(sender, e);
+        }
 
-            // Populate the Role dropdown if not already set in the Designer properties
-            if (cmbRole.Items.Count == 0)
-            {
-                cmbRole.Items.Add("Learner");
-                cmbRole.Items.Add("Career Advisor");
-                cmbRole.Items.Add("Administrator");
-            }
+        private void UpdateLoginInputs(object sender, EventArgs e)
+        {
+            bool learner = cmbRole.Text == "Learner";
+            txtUsername.Enabled = !learner;
+            txtPassword.Enabled = !learner;
+            btnLogin.Text = learner ? "Continue" : "Login";
+            btnLogin.AutoSize = true;
+            btnLogin.Enabled = cmbRole.SelectedIndex >= 0 && (learner ||
+                (!string.IsNullOrWhiteSpace(txtUsername.Text) && !string.IsNullOrWhiteSpace(txtPassword.Text)));
+            lblErrorMsg.Visible = false;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // 1. Read the inputs from the form.
-            string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text.Trim();
             string role = cmbRole.SelectedItem == null ? "" : cmbRole.SelectedItem.ToString();
-
-            // 2. Basic form-level validation first.
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(role))
+            if (role == "")
             {
-                lblErrorMsg.Text = "Please fill in all fields.";
-                lblErrorMsg.Visible = true;
+                ShowError("Please select a role.");
                 return;
             }
-
-            // 3. Ask the LoginController to verify.
-            LoginController controller = new LoginController();
-            bool success = controller.Login(username, password, role);
-
-            // 4. If wrong, show the error and stop.
-            if (!success)
+            try
             {
-                lblErrorMsg.Text = "Invalid username or password.";
-                lblErrorMsg.Visible = true;
-                return;
+                // Do not trim passwords: spaces may be part of a valid password.
+                if (!new LoginController().Login(txtUsername.Text, txtPassword.Text, role))
+                {
+                    ShowError("Invalid username or password.");
+                    return;
+                }
+                MainWindow main = new MainWindow();
+                main.FormClosed += MainWindowClosed;
+                main.Show();
+                Hide();
             }
+            catch (Exception)
+            {
+                new LoginController().Logout();
+                ShowError("Could not connect to the database. Please contact the administrator.");
+            }
+        }
 
-            // 5. Success — open the MainWindow and hide this form.
-            lblErrorMsg.Visible = false;
-            MainWindow main = new MainWindow();  
-            main.Show();
-            this.Hide();
+        private void MainWindowClosed(object sender, FormClosedEventArgs e)
+        {
+            if (IsDisposed || Disposing) return;
+            txtUsername.Clear();
+            txtPassword.Clear();
+            cmbRole.SelectedIndex = -1;
+            Show();
+            Activate();
+        }
+
+        private void ShowError(string message)
+        {
+            lblErrorMsg.Text = message;
+            lblErrorMsg.Visible = true;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            
             Application.Exit();
         }
     }
