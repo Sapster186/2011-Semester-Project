@@ -29,7 +29,7 @@ namespace _2011__Semester_Project.DataAccess
                 {
                     DegreeInterestMapping m = new DegreeInterestMapping();
                     m.MappingID = (int)reader["mappingID"];
-                    m.DegreeProgrammeID = (int)reader["degreeProgrammeID"];
+                    m.DegreeProgrammeID = (int)reader["degreeID"];
                     m.InterestGroupID = (int)reader["interestGroupID"];
                     m.Weight = Convert.ToSingle(reader["weight"]);
                     results.Add(m);

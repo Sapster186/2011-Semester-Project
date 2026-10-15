@@ -153,7 +153,7 @@ namespace _2011__Semester_Project.DataAccess
                 SELECT TOP 1 ig.groupName
                 FROM DegreeInterestMapping m
                 JOIN InterestGroup ig ON ig.interestGroupID = m.interestGroupID
-                WHERE m.degreeprogrammeID = @degreeID
+                WHERE m.degreeID = @degreeID
                 ORDER BY m.weight DESC";
             DataTable t = RunQuery(sql, "@degreeID", degreeID);
             return t.Rows.Count == 0 ? "" : t.Rows[0]["groupName"].ToString();

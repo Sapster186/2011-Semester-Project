@@ -57,7 +57,6 @@ namespace _2011__Semester_Project.Boundary
                     out gap, out subjectScore, out markScore, out interestScore, out facultyScore);
 
                 sessionID = adviceController.SaveSession(session);
-
                 if (session.eligibleResult == AdviceController.STRONG_MATCH
                     || session.eligibleResult == AdviceController.POSSIBLE_MATCH)
                 {
@@ -75,6 +74,20 @@ namespace _2011__Semester_Project.Boundary
                 }
                 else
                 {
+                    // save the chosen degree too, so the gap text is on record (Report 3 needs this)
+                    RecommendationResult chosen = new RecommendationResult();
+                    chosen.sessionID = sessionID;
+                    chosen.degreeID = degreeID;
+                    chosen.subjectMatchScore = subjectScore;
+                    chosen.markMatchScore = markScore;
+                    chosen.interestMatchScore = interestScore;
+                    chosen.desiredFacultyScore = facultyScore;
+                    chosen.overallScore = session.overallScore;
+                    chosen.isAlternative = false;
+                    chosen.gapObservation = gap;
+                    adviceController.SaveRecommendations(new List<RecommendationResult> { chosen });
+
+                    // then find and save alternatives
                     List<DegreeProgramme> allDegrees = degreeDA.GetAllActiveDegrees();
                     List<DegreeRequirements> allReqs = reqDA.GetAllRequirements();
 
@@ -84,6 +97,7 @@ namespace _2011__Semester_Project.Boundary
                     foreach (RecommendationResult r in recs)
                     {
                         r.sessionID = sessionID;
+                        r.isAlternative = true;
                         adviceController.SaveRecommendations(new List<RecommendationResult> { r });
                     }
                 }
