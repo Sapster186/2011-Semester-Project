@@ -8,21 +8,23 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.DataAccess
 {
-    // This is the ONLY class allowed to talk to the FundOption table directly.
+    // FundOptionDA — the only class allowed to talk to the FundOption table.
+    // Provides CRUD for funding options. Deactivation is used instead of
+    // deletion (spec rule: keep history).
     public class FundOptionDA
     {
-        // Gets every funding option that is active AND not past its closing date.
+        // Every funding option that is active AND not past its closing date.
         public List<FundOption> GetActiveFundOptions()
         {
             List<FundOption> results = new List<FundOption>();
 
-            using (SqlConnection conn = DatabaseHelper.GetConnection()) // "using" auto-closes the connection when done
+            using (SqlConnection conn = DatabaseHelper.GetConnection()) // "using" auto-closes the connection
             {
                 string query = "SELECT * FROM FundOption WHERE isActive = 1 AND closeDate >= GETDATE()";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader(); // reads rows back one at a time
+                SqlDataReader reader = cmd.ExecuteReader();   // reads rows back one at a time
 
                 while (reader.Read())
                 {
@@ -42,7 +44,7 @@ namespace _2011__Semester_Project.DataAccess
             return results;
         }
 
-        // Adds a brand new funding option (used later by Member C's admin form).
+        // Adds a brand new funding option (used by Member C's maintenance form).
         public void AddFundOption(FundOption option)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
@@ -52,7 +54,8 @@ namespace _2011__Semester_Project.DataAccess
                     VALUES (@fundName, @fundType, @eligibleSummary, @necessaryDocs, @closeDate, @contactInformation, @isActive)";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
-                // Parameters (the @names) keep this safe from SQL injection - never glue SQL strings together manually.
+                // Parameterised query — never glue SQL strings together manually
+                // (protects against SQL injection).
                 cmd.Parameters.AddWithValue("@fundName", option.FundName);
                 cmd.Parameters.AddWithValue("@fundType", option.FundType);
                 cmd.Parameters.AddWithValue("@eligibleSummary", option.EligibleSummary);
@@ -62,11 +65,11 @@ namespace _2011__Semester_Project.DataAccess
                 cmd.Parameters.AddWithValue("@isActive", option.IsActive);
 
                 conn.Open();
-                cmd.ExecuteNonQuery(); // runs an INSERT/UPDATE/DELETE (no rows returned)
+                cmd.ExecuteNonQuery();   // INSERT/UPDATE/DELETE — no rows returned
             }
         }
 
-        // Edits an existing funding option.
+        // Updates an existing funding option in place.
         public void UpdateFundOption(FundOption option)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
@@ -92,7 +95,8 @@ namespace _2011__Semester_Project.DataAccess
             }
         }
 
-        // Deactivates instead of deleting, so history is kept (per your Part 1 spec).
+        // Deactivates (sets isActive = 0) rather than deleting — the spec
+        // requires history to be kept.
         public void DeactivateFundOption(int fundID)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
@@ -107,4 +111,3 @@ namespace _2011__Semester_Project.DataAccess
         }
     }
 }
-

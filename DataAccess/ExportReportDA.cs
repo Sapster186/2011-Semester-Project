@@ -3,9 +3,16 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.DataAccess
 {
+    // ExportReportDA — writes rows to the ExportReport table.
+    //
+    // Every time the learner saves, exports or prints an Advisory Summary
+    // (or a report), one row is inserted here recording the date, the format
+    // (TXT / PDF / PRINT) and the full text. This is the audit trail required
+    // by the Report 1 spec — it also proves in the demo that the export
+    // actually happened.
     public class ExportReportDA
     {
-        // Logs one export (date, format and the exported text) in the ExportReport table
+        // Inserts one export record.
         public void LogExport(ExportReport report)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())

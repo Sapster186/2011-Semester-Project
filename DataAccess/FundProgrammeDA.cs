@@ -8,9 +8,19 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.DataAccess
 {
+    // FundProgrammeDA — data access for the FundProgramme link table.
+    //
+    // FundProgramme is one of the two funding link tables (the other is
+    // FundFaculty). One row means "this funding option applies to this
+    // specific degree". A funding option can be linked to a faculty
+    // (FundFaculty), a degree (FundProgramme), or both — see the ERD.
+    //
+    // Used by ReportDA.GetOpenFunding to decide which funding options
+    // should appear for a chosen degree (or for a faculty that contains it).
     public class FundProgrammeDA
     {
-        // Gets which degree programmes a specific funding option is linked to.
+        // Returns the links for one funding option — i.e. which degrees it
+        // applies to. Called when opening/editing a funding option.
         public List<FundProgramme> GetProgrammesForFundOption(int fundID)
         {
             List<FundProgramme> results = new List<FundProgramme>();
@@ -35,6 +45,7 @@ namespace _2011__Semester_Project.DataAccess
             return results;
         }
 
+        // Creates a link between a funding option and a degree.
         public void AddFundProgramme(int fundID, int degreeID)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())
