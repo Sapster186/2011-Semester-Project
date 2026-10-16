@@ -40,6 +40,7 @@ namespace _2011__Semester_Project.Controller
             if (gradeLevelID <= 0) return "Please select a grade.";
             if (string.IsNullOrWhiteSpace(province)) return "Please select a province.";
 
+            pendingSubjects = new List<LearnerSubject>();   // a new profile always starts with no subjects
             pendingLearner = new Learner();
             pendingLearner.name = name.Trim();
             pendingLearner.schoolName = school.Trim();
@@ -117,7 +118,8 @@ namespace _2011__Semester_Project.Controller
                 }
 
                 CurrentLearnerID = id;
-                pendingLearner = null;  
+                pendingLearner = null;   // stops a double click saving the same learner twice
+                pendingSubjects = new List<LearnerSubject>();   // the next learner must not inherit these subjects
                 return null;
             }
             catch (SqlException ex)

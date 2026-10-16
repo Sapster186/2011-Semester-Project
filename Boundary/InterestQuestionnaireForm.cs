@@ -19,7 +19,7 @@ namespace _2011__Semester_Project.Boundary
         {
             InitializeComponent();
 
-            
+
             btnNext.Enabled = false;
         }
 
@@ -58,7 +58,7 @@ namespace _2011__Semester_Project.Boundary
                 // Skips the empty row
                 if (row.IsNewRow) continue;
 
-               
+
                 // checks if all columns are filled.
                 if (row.Cells[1].Value == null || string.IsNullOrWhiteSpace(row.Cells[1].Value.ToString()))
                 {
@@ -94,12 +94,11 @@ namespace _2011__Semester_Project.Boundary
             btnNext.Enabled = false;
             MessageBox.Show("Learner Profile successfully created and advice session initiated.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // after the success MessageBox, once Member B's form is ready:
-            int newLearnerId = LearnerController.CurrentLearnerID;
-            // BForm nextForm = new BForm(newLearnerId);
-            // nextForm.MdiParent = this.MdiParent;
-            // nextForm.Show();
-            // this.Hide();
+            // hand the saved learner over to Member B's Faculty and Degree Selection form
+            FacultyDegreeSelectionForm nextForm = new FacultyDegreeSelectionForm(LearnerController.CurrentLearnerID);
+            nextForm.MdiParent = this.MdiParent;
+            nextForm.Show();
+            this.Close();
 
         }
         private void dgvQuestions_CurrentCellDirtyStateChanged(object sender, EventArgs e)

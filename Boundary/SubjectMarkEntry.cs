@@ -26,12 +26,12 @@ namespace _2011__Semester_Project.Boundary
             btnNext.Enabled = false;
         }
 
-       
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
         }
 
-        
+
         private void database1DataSetBindingSource_CurrentChanged(object sender, EventArgs e)
         {
         }
@@ -94,7 +94,7 @@ namespace _2011__Semester_Project.Boundary
             btnAddSubject.Enabled = true;
         }
 
-        
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             Subject chosen = cmbSubject.SelectedItem as Subject;
@@ -130,7 +130,7 @@ namespace _2011__Semester_Project.Boundary
             InterestQuestionnaireForm nextForm = new InterestQuestionnaireForm();
             nextForm.MdiParent = this.MdiParent;
             nextForm.Show();
-            this.Hide();
+            this.Close();   // Close, not Hide, so the next learner starts with a fresh form
 
         }
     }

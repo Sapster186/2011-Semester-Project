@@ -25,6 +25,11 @@ namespace _2011__Semester_Project.Boundary
         {
             LearnerController.StartNewSession();
 
+            // the database columns hold 100 characters, so stop typing there
+            txtFullName.MaxLength = 100;
+            txtSchoolName.MaxLength = 100;
+            txtContact.MaxLength = 100;
+
             cmbGrade.DataSource = LearnerController.GetGrades();
             cmbGrade.DisplayMember = "gradeName";
             cmbGrade.ValueMember = "gradeLevelID";
@@ -67,7 +72,7 @@ namespace _2011__Semester_Project.Boundary
             SubjectMarkEntry subjectForm = new SubjectMarkEntry();
             subjectForm.MdiParent = this.MdiParent;
             subjectForm.Show();
-            this.Hide();
+            this.Close();   // Close, not Hide: a hidden form would be reused for the next learner with the old text in it
 
         }
     }
