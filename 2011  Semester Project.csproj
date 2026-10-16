@@ -294,7 +294,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\Interest_Fix %282%29.sql" />
-    <Content Include="Database\seed_funding.sql" />
+
+    <Content Include="FuturePath.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+        <Content Include="Database\seed_funding.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
