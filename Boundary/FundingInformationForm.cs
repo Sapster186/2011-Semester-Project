@@ -6,6 +6,21 @@ using _2011__Semester_Project.Controller;
 
 namespace _2011__Semester_Project.Boundary
 {
+    // FundingInformationForm — funding lookup filtered by faculty, degree and type.
+    //
+    // Built entirely in code (no Designer).
+    //
+    // Opened two ways:
+    //   1. Directly from a menu / dashboard: new FundingInformationForm()
+    //      - shows all funding, the user picks filters manually.
+    //   2. From the AdvisoryOutcomeForm (Member B):
+    //        new FundingInformationForm(facultyID, degreeID)
+    //       -opens pre-filtered to the learner's chosen faculty and degree.
+    //
+    // Spec rules enforced by the query behind this form (test case 8):
+    //   - isActive = 1 (inactive funds hidden)
+    //   - closeDate is null or in the future (expired funds hidden)
+    //   - every row is flagged as "sample information"
     public partial class FundingInformationForm : Form
     {
         private ReportController reportController = new ReportController();
@@ -23,26 +38,30 @@ namespace _2011__Semester_Project.Boundary
         private DataGridView dgvFunding;
         private Button btnBack;
 
-        // Opened normally: new FundingInformationForm()
-        // Opened from the Advisory Outcome screen (Member B): new FundingInformationForm(facultyID, degreeID)
-        // so the learner immediately sees funding for the faculty and degree they chose.
+        // Constructor: builds layout, loads the three dropdowns, then applies the
+        // pre-selected filters if any were supplied.
         public FundingInformationForm(int? facultyID = null, int? degreeID = null)
         {
             InitializeComponent();
             SetupControls();
 
+            // Load the faculty list first, then apply the pre-filter, then
+            // load degrees for that faculty and apply the degree pre-filter.
             LoadFaculties();
             if (facultyID.HasValue) cmbFaculty.SelectedValue = facultyID.Value;
             LoadDegrees();
             if (degreeID.HasValue) cmbDegree.SelectedValue = degreeID.Value;
             LoadFundTypes();
 
-            // Attached AFTER the first load, so filling the lists doesn't trigger it
+            // Attached AFTER the initial load so building the lists doesn't fire it.
+            // When the user changes the faculty, we rebuild the degree list.
             cmbFaculty.SelectedIndexChanged += (s, e) => LoadDegrees();
 
-            Search();   // show the matching funding straight away
+            Search();   // show matching funding straight away
         }
 
+        // Builds all controls in code, in the screen-standard layout
+        // (heading at top, filters in the middle, grid and buttons at the bottom).
         private void SetupControls()
         {
             this.Text = "Future Path - Funding Information";
@@ -63,7 +82,7 @@ namespace _2011__Semester_Project.Boundary
             cmbFaculty = new ComboBox();
             cmbFaculty.Location = new Point(100, 62);
             cmbFaculty.Width = 220;
-            cmbFaculty.DropDownStyle = ComboBoxStyle.DropDownList;   // lookup list: must pick from it
+            cmbFaculty.DropDownStyle = ComboBoxStyle.DropDownList;   // lookup list: user must pick from it
 
             lblDegree = new Label();
             lblDegree.Text = "Degree:";
@@ -122,7 +141,8 @@ namespace _2011__Semester_Project.Boundary
             this.Controls.Add(btnBack);
         }
 
-        // Faculty drop-down: "All" first (ID 0), then every faculty
+        // Faculty dropdown: "All" (ID 0) at the top, then every faculty.
+        // The "All" row is added to the DataTable before binding.
         private void LoadFaculties()
         {
             DataTable faculties = reportController.GetFaculties();
@@ -136,7 +156,8 @@ namespace _2011__Semester_Project.Boundary
             cmbFaculty.DataSource = faculties;
         }
 
-        // Degree drop-down: only the active degrees of the chosen faculty (spec: always filtered)
+        // Degree dropdown: only active degrees of the chosen faculty (spec rule).
+        // Re-called whenever the faculty changes. "All" (ID 0) is added at the top.
         private void LoadDegrees()
         {
             DataTable degrees = reportController.GetDegrees(SelectedID(cmbFaculty));
@@ -150,7 +171,8 @@ namespace _2011__Semester_Project.Boundary
             cmbDegree.DataSource = degrees;
         }
 
-        // Type drop-down: "All" plus the funding types that exist in the database
+        // Type dropdown: "All" plus the funding types that exist in the database.
+        // Loaded once (the type list doesn't depend on the other filters).
         private void LoadFundTypes()
         {
             cmbType.Items.Clear();
@@ -160,7 +182,8 @@ namespace _2011__Semester_Project.Boundary
             cmbType.SelectedIndex = 0;
         }
 
-        // Returns null when "All" (ID 0) is chosen, otherwise the chosen ID
+        // Translates the combo box selection into a filter value:
+        // "All" (ID 0) means "no filter" → return null.
         private int? SelectedID(ComboBox box)
         {
             if (box.SelectedValue == null) return null;
@@ -168,7 +191,8 @@ namespace _2011__Semester_Project.Boundary
             return id == 0 ? (int?)null : id;
         }
 
-        // Fills the grid with the funding that matches the three filters
+        // Runs the funding lookup with the current filter values and fills the grid.
+        // Any of the three filters can be "no filter" (null).
         private void Search()
         {
             string type = cmbType.SelectedItem.ToString();

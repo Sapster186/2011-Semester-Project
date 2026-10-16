@@ -4,12 +4,14 @@ using System.Data.SqlClient;
 
 namespace _2011__Semester_Project.DataAccess
 {
-    // Read-only queries behind the funding screen, summary, dashboard and reports.
-    // Only Data Access classes talk to the database; the controller calls these methods.
+    // ReportDA — all SQL behind Member D's screens:
+    //   Funding form, Advisory Summary (Report 1), Career Advisor Dashboard,
+    //   Report 2 (RPT-SUM-002) and Report 3 (RPT-EXC-001).
+    // Only Data Access classes talk to the database.
     public class ReportDA
     {
-        // Runs a SELECT and returns the rows as a DataTable.
-        // Parameters are passed as pairs: "@name", value, "@name2", value2 ...
+        // Helper: runs a SELECT and returns the rows as a DataTable.
+        // Parameters come in pairs: "@name", value, "@name2", value2 ...
         private DataTable RunQuery(string sql, params object[] parameters)
         {
             DataTable table = new DataTable();
@@ -18,22 +20,24 @@ namespace _2011__Semester_Project.DataAccess
             {
                 for (int i = 0; i < parameters.Length; i += 2)
                 {
-                    // A null value is sent as DBNull, which SQL treats as "no value"
+                    // null becomes DBNull so SQL treats it as "no value" and the
+                    // "@x IS NULL" conditions work as "no filter".
                     cmd.Parameters.AddWithValue((string)parameters[i], parameters[i + 1] ?? DBNull.Value);
                 }
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                adapter.Fill(table);   // Fill opens and closes the connection by itself
+                adapter.Fill(table);   // opens and closes the connection
             }
             return table;
         }
 
-        // ---------- Funding Information Form ----------
+        // ---------- FUNDING INFORMATION FORM ----------
+
         public DataTable GetFaculties()
         {
             return RunQuery("SELECT facultyID, facultyName FROM Faculty ORDER BY facultyName");
         }
 
-        // Active degrees only (inactive ones are excluded), optionally for one faculty
+        // Active degrees only. null facultyID = all faculties.
         public DataTable GetDegrees(int? facultyID)
         {
             string sql = @"
@@ -44,16 +48,17 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@facultyID", facultyID);
         }
 
-        // The funding types that exist (the lookup list for the Type filter)
+        // The distinct fund types that exist, for the Type dropdown.
         public DataTable GetFundTypes()
         {
             return RunQuery("SELECT DISTINCT fundType FROM FundOption WHERE isActive = 1 ORDER BY fundType");
         }
 
-        // Funding that is active and not past its closing date.
-        // Faculty filter: linked to the faculty, or to a degree in that faculty.
-        // Degree filter: linked to the degree, or to the whole faculty the degree belongs to.
-        // Pass null for any filter you don't want.
+        // Active funding that is not past its closing date.
+        // Faculty filter matches funds linked to the faculty OR to a degree in it.
+        // Degree filter matches funds linked to the degree OR to the whole faculty.
+        // This is what makes a faculty-wide fund show on a specific degree's page.
+        // null filter = no filter. Test case 8 checks the isActive and closeDate rules.
         public DataTable GetOpenFunding(int? facultyID, int? degreeID, string fundType)
         {
             string sql = @"
@@ -77,8 +82,12 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@facultyID", facultyID, "@degreeID", degreeID, "@fundType", fundType);
         }
 
-        // ---------- Career Advisor Dashboard ----------
-        // One row per session, with the outcome and its gap observation
+        // ---------- CAREER ADVISOR DASHBOARD ----------
+
+        // One row per session with the outcome and its gap.
+        // The OUTER APPLY picks the gap from the learner's chosen degree
+        // (isAlternative = 0) so the dashboard shows the reason the learner saw.
+        // null nameFilter = show everyone.
         public DataTable SearchSessions(string nameFilter)
         {
             string sql = @"
@@ -96,7 +105,9 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@name", nameFilter);
         }
 
-        // ---------- Advisory Summary (Report 1) ----------
+        // ---------- ADVISORY SUMMARY (Report 1) ----------
+
+        // Everything needed for the summary header in one query.
         public DataTable GetSessionInfo(int sessionID)
         {
             string sql = @"
@@ -112,7 +123,7 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@sessionID", sessionID);
         }
 
-        // Subjects and marks, sorted alphabetically (as the spec requires)
+        // Subjects and marks, sorted alphabetically (spec rule).
         public DataTable GetLearnerMarks(int learnerID)
         {
             string sql = @"
@@ -124,7 +135,7 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@learnerID", learnerID);
         }
 
-        // The stored requirements for the degree (for the marks comparison)
+        // The stored requirements for a degree, for the requirement comparison.
         public DataTable GetDegreeRequirements(int degreeID)
         {
             string sql = @"
@@ -136,7 +147,8 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@degreeID", degreeID);
         }
 
-        // Member B's saved interest score and gap explanation for the chosen degree (may be empty)
+        // Member B's saved interest score and gap for the chosen degree in this session.
+        // May be empty if the session predates B's fix.
         public DataTable GetSessionResult(int sessionID, int degreeID)
         {
             string sql = @"
@@ -146,7 +158,8 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@sessionID", sessionID, "@degreeID", degreeID);
         }
 
-        // The interest group that suits the degree best (used for the Aligned Interest text)
+        // The interest group that suits the degree best (highest weight).
+        // Returns "" if there is no mapping for the degree.
         public string GetTopInterestGroup(int degreeID)
         {
             string sql = @"
@@ -159,7 +172,8 @@ namespace _2011__Semester_Project.DataAccess
             return t.Rows.Count == 0 ? "" : t.Rows[0]["groupName"].ToString();
         }
 
-        // Alternatives for the session, best first. Inactive degrees are excluded (spec rule).
+        // Alternatives for the session, best score first.
+        // Inactive degrees are excluded (spec rule).
         public DataTable GetAlternatives(int sessionID)
         {
             string sql = @"
@@ -171,8 +185,10 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@sessionID", sessionID);
         }
 
-        // ---------- Report 2: Degree Interest and Eligibility ----------
-        // The end date is "exclusive": midnight after the last chosen day, so that day is included
+        // ---------- REPORT 2: DEGREE INTEREST AND ELIGIBILITY (RPT-SUM-002) ----------
+        // The controller passes an "end exclusive" date (midnight after the last
+        // day the user chose) so the whole last day is included.
+
         public DataTable GetOutcomeCounts(DateTime start, DateTime endExclusive)
         {
             string sql = @"
@@ -183,7 +199,7 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@start", start, "@end", endExclusive);
         }
 
-        // Funding type plus faculty linked most often to the degrees learners chose.
+        // The funding type + faculty linked most often to the degrees learners chose.
         // A tie is broken alphabetically.
         public string GetTopFundingCategory(DateTime start, DateTime endExclusive)
         {
@@ -202,7 +218,8 @@ namespace _2011__Semester_Project.DataAccess
             return t.Rows.Count == 0 ? "None" : t.Rows[0]["Category"].ToString();
         }
 
-        // The required subject learners most often miss or fall below the minimum in
+        // The required subject that learners most often miss or fall below the
+        // minimum in. Uses LEFT JOIN so a missing LearnerSubject row counts.
         public string GetMostCommonGap(DateTime start, DateTime endExclusive)
         {
             string sql = @"
@@ -219,7 +236,8 @@ namespace _2011__Semester_Project.DataAccess
             return t.Rows.Count == 0 ? "None" : t.Rows[0]["SubjectName"].ToString();
         }
 
-        // Selections per faculty and degree: grouped by faculty, highest Total first inside each faculty
+        // One row per degree with session counts and outcome breakdown.
+        // Sorted: faculty A-Z, then Total descending, then degree A-Z.
         public DataTable GetDegreeSelectionTable(DateTime start, DateTime endExclusive)
         {
             string sql = @"
@@ -237,8 +255,10 @@ namespace _2011__Semester_Project.DataAccess
             return RunQuery(sql, "@start", start, "@end", endExclusive);
         }
 
-        // ---------- Report 3: Not Currently Eligible Exception ----------
-        // Only Not Currently Eligible or More Information Needed; sorted by grade, then learner name
+        // ---------- REPORT 3: NOT CURRENTLY ELIGIBLE EXCEPTION (RPT-EXC-001) ----------
+
+        // Only Not Currently Eligible and More Information Needed.
+        // Sorted by grade, then learner name (as the spec requires).
         public DataTable GetExceptionRows()
         {
             string sql = @"
