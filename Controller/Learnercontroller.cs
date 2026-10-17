@@ -57,7 +57,7 @@ namespace _2011__Semester_Project.Controller
         {
             double mark;
 
-            if (subjectID <= 0) return "Please select a subject.":
+            if (subjectID <= 0) return "Please select a subject.";
             if (!double.TryParse(markText, out mark)) return "Mark must be a number.";
             if (mark < 0 || mark > 100) return "Mark must be between 0 and 100.";
             foreach (LearnerSubject s in pendingSubjects)
