@@ -14,6 +14,9 @@ namespace _2011__Semester_Project.Boundary
 {
     public partial class LearnerProfileForm : Form
     {
+        // all forms validate fields in 2 different ways
+        // manual validate fields function and on the database field
+        // all forms also ensure information is filled out before displaying buttons
         public LearnerProfileForm()
         {
             InitializeComponent();
@@ -25,7 +28,7 @@ namespace _2011__Semester_Project.Boundary
         {
             LearnerController.StartNewSession();
 
-            // the database columns hold 100 characters, so stop typing there
+            // Limits the length of the tabs to 100 characters as that is the length of the database rows.
             txtFullName.MaxLength = 100;
             txtSchoolName.MaxLength = 100;
             txtContact.MaxLength = 100;
@@ -39,9 +42,10 @@ namespace _2011__Semester_Project.Boundary
             cmbProvince.Items.AddRange(new string[] {
         "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal", "Limpopo",
         "Mpumalanga", "North West", "Northern Cape", "Western Cape" });
+          
         }
-
-
+        
+        // necessary checks if any fields are empty or null
         private void ValidateRequiredFields(object sender, EventArgs e)
         {
             bool isNameValid = !string.IsNullOrWhiteSpace(txtFullName.Text);
@@ -62,7 +66,7 @@ namespace _2011__Semester_Project.Boundary
             int gradeId = Convert.ToInt32(cmbGrade.SelectedValue);
 
             string err = LearnerController.CaptureProfile(txtFullName.Text, txtSchoolName.Text,
-                gradeId, cmbProvince.Text, txtContact.Text);
+                gradeId, cmbProvince.Text, txtContact.Text); // controller checks to validate all fields
             if (err != null)
             {
                 MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);

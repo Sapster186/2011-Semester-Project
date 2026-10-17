@@ -28,6 +28,8 @@ namespace _2011__Semester_Project.Entity
             this.isScience = isScience;
         }
 
+        // Ensures that the grade level shows the subject name instea of a generic name 
+        // or any other attribute.
         public override string ToString()
         {
             return subjectName;
