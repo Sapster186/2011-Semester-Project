@@ -94,9 +94,6 @@
     <Compile Include="Boundary\CareerAdvisorDashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Boundary\CareerAdvisorDashboardForm.Designer.cs">
-      <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Boundary\FacultyDegreeSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -222,6 +219,9 @@
     <EmbeddedResource Include="Boundary\AlternativeProgramsForm.resx">
       <DependentUpon>AlternativeProgramsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\CareerAdvisorDashboardForm.resx">
+      <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Boundary\FacultyDegreeSelectionForm.resx">
       <DependentUpon>FacultyDegreeSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -297,7 +297,6 @@
       <DependentUpon>FuturePath.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Database\Interest_Fix %282%29.sql" />
     <Content Include="Database\FuturePath.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
