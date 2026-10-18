@@ -292,8 +292,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Database\FuturePath.mdf">
+   <ItemGroup>
+  <Content Include="Database\FuturePath.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Database\FuturePath_log.ldf">

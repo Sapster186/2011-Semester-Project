@@ -8,9 +8,17 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.DataAccess
 {
+    // FundFacultyDA — data access for the FundFaculty link table.
+    //
+    // FundFaculty means "this funding option applies to this whole faculty".
+    // The other link table (FundProgramme) covers degree-level links.
+    // A fund can be linked to a faculty, a degree, or both (see the ERD).
+    //
+    // Used by ReportDA.GetOpenFunding: a fund linked to a faculty also shows
+    // for every degree inside that faculty.
     public class FundFacultyDA
     {
-        // Gets which faculties a specific funding option is linked to.
+        // The faculties a given funding option is linked to.
         public List<FundFaculty> GetFacultiesForFundOption(int fundID)
         {
             List<FundFaculty> results = new List<FundFaculty>();
@@ -35,7 +43,7 @@ namespace _2011__Semester_Project.DataAccess
             return results;
         }
 
-        // Creates a new faculty link for a funding option.
+        // Creates a faculty link for a funding option.
         public void AddFundFaculty(int fundID, int facultyID)
         {
             using (SqlConnection conn = DatabaseHelper.GetConnection())

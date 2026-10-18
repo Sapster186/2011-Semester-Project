@@ -26,12 +26,12 @@ namespace _2011__Semester_Project.Boundary
             btnNext.Enabled = false;
         }
 
-       
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
         }
 
-        
+
         private void database1DataSetBindingSource_CurrentChanged(object sender, EventArgs e)
         {
         }
@@ -59,7 +59,7 @@ namespace _2011__Semester_Project.Boundary
             ValidateInput();
         }
 
-        // Handles the logic of has the user typed in valid information.
+        // Handles the validation logic
         private void ValidateInput()
         {
             lblError.Visible = false;
@@ -82,7 +82,7 @@ namespace _2011__Semester_Project.Boundary
                 return;
             }
 
-            // range check
+            // ensures the range is between 0 and 100
             if (!float.TryParse(txtMark.Text, out float mark) || mark < 0 || mark > 100)
             {
                 lblError.Text = "Mark must be between 0 and 100.";
@@ -94,7 +94,7 @@ namespace _2011__Semester_Project.Boundary
             btnAddSubject.Enabled = true;
         }
 
-        
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             Subject chosen = cmbSubject.SelectedItem as Subject;
@@ -130,7 +130,7 @@ namespace _2011__Semester_Project.Boundary
             InterestQuestionnaireForm nextForm = new InterestQuestionnaireForm();
             nextForm.MdiParent = this.MdiParent;
             nextForm.Show();
-            this.Hide();
+            this.Close();   // Closes form so user starts on a new form
 
         }
     }

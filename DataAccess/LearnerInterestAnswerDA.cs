@@ -7,7 +7,7 @@ namespace _2011__Semester_Project.DataAccess
 {
     public class LearnerInterestAnswerDA
     {
-        // insert learner answers
+        // Inserts user answers into answers table
         public void Insert(LearnerInterestAnswer a)
         {
             SqlConnection conn = DatabaseHelper.GetConnection();
@@ -65,7 +65,7 @@ namespace _2011__Semester_Project.DataAccess
             }
         }
 
-        // Undoes and deletes a record of an incomplete record
+        // Undos and deletes a record of an incomplete record
         public void DeleteByLearner(int learnerID)
         {
             SqlConnection conn = DatabaseHelper.GetConnection();

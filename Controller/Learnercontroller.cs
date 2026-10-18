@@ -7,7 +7,8 @@ using _2011__Semester_Project.Entity;
 namespace _2011__Semester_Project.Controller
 {
     // Holds one learner's session across the three forms and saves it all
-    // at the end. If anything fails part-way, the half-saved learner is removed.
+    // ONLY SAVES AT THE END. If anything fails part-way, the half-saved learner is removed.
+    // 2nd layer of data validation, checks for null values or attributes null values to empty data if theyre null the session would be deleted
     public static class LearnerController
     {
         private static readonly LookupDA lookupDA = new LookupDA();
@@ -18,7 +19,7 @@ namespace _2011__Semester_Project.Controller
         // ---- session state (filled form by form) ----
         private static Learner pendingLearner;
         private static List<LearnerSubject> pendingSubjects = new List<LearnerSubject>();
-        public static int CurrentLearnerID { get; private set; }   // set after a successful save
+        public static int CurrentLearnerID { get; private set; }   
 
         // ---- lookups for the forms ----
         public static List<GradeLevel> GetGrades() { return lookupDA.GetGrades(); }
@@ -40,12 +41,13 @@ namespace _2011__Semester_Project.Controller
             if (gradeLevelID <= 0) return "Please select a grade.";
             if (string.IsNullOrWhiteSpace(province)) return "Please select a province.";
 
+            pendingSubjects = new List<LearnerSubject>();   // a new profile starts with no subjects
             pendingLearner = new Learner();
             pendingLearner.name = name.Trim();
             pendingLearner.schoolName = school.Trim();
             pendingLearner.gradeLevelID = gradeLevelID;
             pendingLearner.province = province;
-            pendingLearner.contactDetails = string.IsNullOrWhiteSpace(contact) ? null : contact.Trim();
+            pendingLearner.contactDetails = string.IsNullOrWhiteSpace(contact) ? null : contact.Trim(); // accepts null values
             pendingLearner.dateCreated = DateTime.Now;
             return null;
         }
@@ -53,8 +55,9 @@ namespace _2011__Semester_Project.Controller
         // Form 2, per row. Returns null if OK, else error message.
         public static string AddSubjectMark(int subjectID, string markText)
         {
-            if (subjectID <= 0) return "Please select a subject.";
             double mark;
+
+            if (subjectID <= 0) return "Please select a subject.";
             if (!double.TryParse(markText, out mark)) return "Mark must be a number.";
             if (mark < 0 || mark > 100) return "Mark must be between 0 and 100.";
             foreach (LearnerSubject s in pendingSubjects)
@@ -117,7 +120,8 @@ namespace _2011__Semester_Project.Controller
                 }
 
                 CurrentLearnerID = id;
-                pendingLearner = null;  
+                pendingLearner = null;   // stops a double click saving the same learner twice
+                pendingSubjects = new List<LearnerSubject>();   // the next learner must not inherit these subjects
                 return null;
             }
             catch (SqlException ex)

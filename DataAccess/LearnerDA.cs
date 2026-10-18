@@ -8,7 +8,7 @@ namespace _2011__Semester_Project.DataAccess
     
     public class LearnerDA
     {
-        // insert a new learner and return their unique id
+        // Data access that inserts learners into the db
         public int Insert(Learner l)
         {
             SqlConnection conn = DatabaseHelper.GetConnection();
@@ -43,7 +43,8 @@ namespace _2011__Semester_Project.DataAccess
         {
             SqlConnection conn = DatabaseHelper.GetConnection();
              
-            // fetches learner based on unique idnumber
+            // user for select statement querie that get the attributes of a learner
+            // Searches by LearnerID
             try
             {
                 string sql = "SELECT [learnerID],[gradeLevelID],[name],[schoolName],[province],[contactDetails],[dateCreated] FROM [dbo].[Learner] WHERE [learnerID]=@id";
@@ -74,7 +75,8 @@ namespace _2011__Semester_Project.DataAccess
             }
         }
 
-        // Deletes an unfinished record based on the ID
+        // If a user does not finish their recprd, their data is deleted
+        // also just searches by learner ID and deletes by that
         public void Delete(int learnerID)
         {
             SqlConnection conn = DatabaseHelper.GetConnection();

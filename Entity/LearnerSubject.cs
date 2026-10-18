@@ -8,6 +8,8 @@ namespace _2011__Semester_Project.Entity
 {
     public class LearnerSubject
     {
+        //  Links learner with subject tables
+        // takes learner subject and learner ID as composite keys 
         public int learnerSubjectID { get; set; }
         public int learnerID { get; set; }
         public int subjectID { get; set; }

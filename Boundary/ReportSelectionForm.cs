@@ -8,11 +8,21 @@ using _2011__Semester_Project.Controller;
 
 namespace _2011__Semester_Project.Boundary
 {
+    // ReportSelectionForm — the screen where Career Advisors and Administrators
+    // generate, view, save and print Reports 2 and 3:
+    //   Report 2 (RPT-SUM-002) — Degree Interest and Eligibility
+    //   Report 3 (RPT-EXC-001) — Learners Not Currently Eligible
+    //
+    // Opened only from the Career Advisor Dashboard / Administrator Dashboard:
+    //     new ReportSelectionForm(role).Show();
+    //
+    // RBAC (spec test case 14): other roles get "Access denied" on load and
+    // the form closes. The controller also checks on each generation call.
     public partial class ReportSelectionForm : Form
     {
         private ReportController reportController = new ReportController();
         private string role;           // the logged-in role, passed in by the dashboard
-        private int currentReport = 0; // 2 or 3 once a report has been generated
+        private int currentReport = 0; // 2 or 3 once a report has been generated; 0 = none yet
 
         private Label lblTitle;
         private ComboBox cmbReportType;
@@ -28,15 +38,14 @@ namespace _2011__Semester_Project.Boundary
         private Button btnSavePdf;
         private Button btnPrint;
 
-        // Only the Career Advisor Dashboard and the Administrator Dashboard open this form:
-        // new ReportSelectionForm(role).Show();
+        // Constructor: builds the layout, sets up the access check on load.
         public ReportSelectionForm(string role)
         {
             InitializeComponent();
             this.role = role;
             SetupControls();
 
-            // Access control (spec test case 14): other roles are refused and the form closes
+            // Access control on load: if the role is not allowed, warn and close.
             this.Load += (s, e) =>
             {
                 if (!reportController.HasStaffAccess(this.role))
@@ -47,6 +56,7 @@ namespace _2011__Semester_Project.Boundary
             };
         }
 
+        // Builds all controls in code (no Designer).
         private void SetupControls()
         {
             this.Text = "Future Path - Report Generation";
@@ -59,6 +69,7 @@ namespace _2011__Semester_Project.Boundary
             lblTitle.Location = new Point(20, 15);
             lblTitle.AutoSize = true;
 
+            // Report picker. Only two reports, so a dropdown.
             cmbReportType = new ComboBox();
             cmbReportType.Location = new Point(20, 60);
             cmbReportType.Width = 400;
@@ -66,7 +77,7 @@ namespace _2011__Semester_Project.Boundary
             cmbReportType.Items.Add("Report 2: Degree Interest and Eligibility");
             cmbReportType.Items.Add("Report 3: Learners Not Currently Eligible (Exception)");
             cmbReportType.SelectedIndex = 0;
-            // The date pickers only apply to Report 2, so hide them for Report 3
+            // Date pickers only apply to Report 2 — hide them for Report 3.
             cmbReportType.SelectedIndexChanged += (s, e) =>
             {
                 bool isReport2 = cmbReportType.SelectedIndex == 0;
@@ -81,11 +92,12 @@ namespace _2011__Semester_Project.Boundary
             lblStartDate.Location = new Point(20, 105);
             lblStartDate.AutoSize = true;
 
-            dtpStartDate = new DateTimePicker();   // format check: only valid dates can be chosen
+            // DateTimePicker means only valid dates can be chosen (input integrity).
+            dtpStartDate = new DateTimePicker();
             dtpStartDate.Format = DateTimePickerFormat.Short;
             dtpStartDate.Location = new Point(100, 100);
             dtpStartDate.Width = 130;
-            dtpStartDate.Value = new DateTime(DateTime.Today.Year, 1, 1);   // 1 January this year
+            dtpStartDate.Value = new DateTime(DateTime.Today.Year, 1, 1);   // 1 Jan this year
 
             lblEndDate = new Label();
             lblEndDate.Text = "End Date:";
@@ -104,7 +116,8 @@ namespace _2011__Semester_Project.Boundary
             btnGenerate.Location = new Point(20, 140);
             btnGenerate.Click += BtnGenerate_Click;
 
-            // Shows the report title, totals and percentages above the table
+            // Header textbox shows the report title, totals and percentages
+            // above the grid. Monospace so columns line up.
             txtHeader = new TextBox();
             txtHeader.Multiline = true;
             txtHeader.ReadOnly = true;
@@ -113,6 +126,7 @@ namespace _2011__Semester_Project.Boundary
             txtHeader.Height = 190;
             txtHeader.Font = new Font("Consolas", 9);
 
+            // Grid: the data table behind whichever report is being shown.
             dgvResults = new DataGridView();
             dgvResults.Location = new Point(20, 380);
             dgvResults.Width = 900;
@@ -122,7 +136,8 @@ namespace _2011__Semester_Project.Boundary
             dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvResults.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dgvResults.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgvResults.DataBindingComplete += DgvResults_DataBindingComplete;   // used for the colours
+            // DataBindingComplete fires after the DataSource is set — used to colour rows.
+            dgvResults.DataBindingComplete += DgvResults_DataBindingComplete;
 
             lblFooter = new Label();
             lblFooter.Location = new Point(20, 628);
@@ -161,6 +176,9 @@ namespace _2011__Semester_Project.Boundary
             this.Controls.Add(btnPrint);
         }
 
+        // "Generate Report" — branches on the dropdown, calls the matching
+        // controller method, fills the header textbox, grid and footer.
+        // Validation: end date must not be before start date (Report 2 only).
         private void BtnGenerate_Click(object sender, EventArgs e)
         {
             try
@@ -168,7 +186,7 @@ namespace _2011__Semester_Project.Boundary
                 string header;
                 if (cmbReportType.SelectedIndex == 0)
                 {
-                    // Validation: the end date must not be before the start date
+                    // Report 2 — date range applies
                     if (dtpEndDate.Value.Date < dtpStartDate.Value.Date)
                     {
                         MessageBox.Show("End Date must not be before Start Date.");
@@ -179,6 +197,7 @@ namespace _2011__Semester_Project.Boundary
                 }
                 else
                 {
+                    // Report 3 — no date range, always shows current exceptions
                     currentReport = 3;
                     dgvResults.DataSource = reportController.GetExceptionReport(role, out header);
                 }
@@ -191,12 +210,15 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
-        // Formatting: group, subtotal and total rows are bold on grey; Report 3 learner rows are red
+        // Colouring rules, applied after the DataSource is set:
+        //   - Report 3 Data rows: red (exceptions)
+        //   - Group/Subtotal/Total rows: bold on light grey
+        // The RowType column drives this and is hidden from the user.
         private void DgvResults_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             if (!dgvResults.Columns.Contains("RowType")) return;
 
-            dgvResults.Columns["RowType"].Visible = false;   // helper column, not shown to the user
+            dgvResults.Columns["RowType"].Visible = false;   // helper column, not shown
             foreach (DataGridViewRow row in dgvResults.Rows)
             {
                 string type = Convert.ToString(row.Cells["RowType"].Value);
@@ -212,16 +234,19 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
-        // Turns the header, grid and footer into plain text for saving and printing
+        // Converts the header, grid and footer into one plain-text block for
+        // saving as .txt / PDF and for printing.
         private string BuildReportText()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(txtHeader.Text);
 
+            // Column headers
             foreach (DataGridViewColumn col in dgvResults.Columns)
                 if (col.Visible) sb.Append(col.HeaderText + " | ");
             sb.AppendLine();
 
+            // Data rows
             foreach (DataGridViewRow row in dgvResults.Rows)
             {
                 foreach (DataGridViewColumn col in dgvResults.Columns)
@@ -233,7 +258,7 @@ namespace _2011__Semester_Project.Boundary
             return sb.ToString();
         }
 
-        // True when a report has been generated; otherwise tells the user to generate one
+        // Guards the save and print buttons: refuse until a report has been generated.
         private bool HasReport()
         {
             if (currentReport == 0)
@@ -244,11 +269,13 @@ namespace _2011__Semester_Project.Boundary
             return true;
         }
 
+        // Default file name for the save dialogs, based on which report is showing.
         private string DefaultName()
         {
             return currentReport == 2 ? "Report2_DegreeInterest" : "Report3_ExceptionReport";
         }
 
+        // Save as .txt: writes the file, then shows a confirmation with today's date.
         private void BtnSaveText_Click(object sender, EventArgs e)
         {
             if (!HasReport()) return;
@@ -262,6 +289,7 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
+        // Save as PDF: uses Windows "Microsoft Print to PDF" via PrintHelper.
         private void BtnSavePdf_Click(object sender, EventArgs e)
         {
             if (!HasReport()) return;
@@ -275,15 +303,16 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
+        // Print: sends the report text to the default printer via PrintHelper.
         private void BtnPrint_Click(object sender, EventArgs e)
         {
             if (!HasReport()) return;
             PrintHelper.Print(BuildReportText(), new Font("Consolas", 9));
         }
 
+        // Empty — the access check runs on the Load event wired in the constructor.
         private void ReportSelectionForm_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

@@ -8,15 +8,20 @@ using _2011__Semester_Project.Entity;
 
 namespace _2011__Semester_Project.Controller
 {
-    // The brain for funding, the Advisory Summary and the reports.
-    // Forms ask this class; this class asks the Data Access classes.
+    // ReportController — Member D's business logic layer.
+    // Handles: funding lookup, Advisory Summary (Report 1), dashboard search,
+    // Report 2 (RPT-SUM-002) and Report 3 (RPT-EXC-001).
+    // Golden flow: Boundary → Controller (this) → Data Access → Database.
+    // Design change: no FundingController exists in Part 1, so the funding
+    // lookup lives here alongside the reporting logic.
     public class ReportController
     {
         private ReportDA reportDA = new ReportDA();
         private ExportReportDA exportReportDA = new ExportReportDA();
 
-        // ---------- ACCESS CONTROL (Role-Based Access Control from the spec) ----------
-        // Only Career Advisors and Administrators may use the dashboard and Reports 2 and 3
+        // ---------- ACCESS CONTROL ----------
+
+        // Role-based access control: only Career Advisors and Administrators.
         public bool HasStaffAccess(string role)
         {
             return role != null &&
@@ -24,7 +29,8 @@ namespace _2011__Semester_Project.Controller
                     role.Equals("Administrator", StringComparison.OrdinalIgnoreCase));
         }
 
-        // Second line of defence: the controller refuses even if a form forgot to check
+        // Second line of defence — called by every staff-only method so a form
+        // that forgets to check cannot leak data.
         private void RequireStaffAccess(string role)
         {
             if (!HasStaffAccess(role))
@@ -32,37 +38,44 @@ namespace _2011__Semester_Project.Controller
         }
 
         // ---------- FUNDING LOOKUP ----------
+
         public DataTable GetFaculties()
         {
             return reportDA.GetFaculties();
         }
 
+        // Degrees for a faculty. null = all faculties.
         public DataTable GetDegrees(int? facultyID)
         {
             return reportDA.GetDegrees(facultyID);
         }
 
+        // Distinct fund types that exist in the DB, for the Type dropdown.
         public DataTable GetFundTypes()
         {
             return reportDA.GetFundTypes();
         }
 
-        // Active, not-expired funding filtered by faculty, degree and type (null = no filter)
+        // Active, not-expired funding filtered by faculty, degree and type.
+        // Any filter can be null (= no filter). Test case 8 checks the inactive
+        // and past-closeDate exclusions.
         public DataTable GetFundingOptions(int? facultyID, int? degreeID, string fundType)
         {
             return reportDA.GetOpenFunding(facultyID, degreeID, fundType);
         }
 
         // ---------- CAREER ADVISOR DASHBOARD ----------
+
+        // One row per advice session. Empty name = show everyone.
         public DataTable SearchSessions(string name, string role)
         {
             RequireStaffAccess(role);
-            // An empty search box means "show everyone"
             return reportDA.SearchSessions(string.IsNullOrWhiteSpace(name) ? null : name.Trim());
         }
 
         // ---------- ADVISORY SUMMARY (Report 1) ----------
-        // Converts a mark to APS points using the scale from the Part 1 report
+
+        // Percentage → APS points using the standard scale from Part 1.
         private int ApsPoints(double mark)
         {
             if (mark >= 80) return 7;
@@ -74,7 +87,7 @@ namespace _2011__Semester_Project.Controller
             return 1;
         }
 
-        // The footer: always shows the Date Generated and the exact disclaimer from the spec
+        // Footer required by Part 1: Date Generated + disclaimer.
         public string GetFooterText()
         {
             return "Date Generated: " + DateTime.Now.ToString("dd/MM/yyyy") + Environment.NewLine +
@@ -82,7 +95,9 @@ namespace _2011__Semester_Project.Controller
                    "OFFICIAL UNIVERSITY ADMISSION DECISION. ALL REQUIREMENTS MUST BE VERIFIED WITH THE INSTITUTION";
         }
 
-        // Builds the summary text in the order of the Part 1 report layout
+        // Builds the whole Advisory Summary as a string, in the Part 1 order:
+        // 1. Profile, 2. Academic Profile, 3. Aligned Interest,
+        // 4. Eligibility Outcome, 5. Alternatives, 6. Funding.
         public string BuildAdvisorySummaryText(int sessionID)
         {
             DataTable info = reportDA.GetSessionInfo(sessionID);
@@ -109,7 +124,7 @@ namespace _2011__Semester_Project.Controller
             sb.AppendLine("Selected Degree: " + row["degreeName"]);
             sb.AppendLine();
 
-            // 2. Academic Profile (alphabetical, mark and APS points per subject)
+            // 2. Academic Profile — marks sorted alphabetically by the DA
             sb.AppendLine("2. Academic Profile");
             DataTable marks = reportDA.GetLearnerMarks(learnerID);
             foreach (DataRow m in marks.Rows)
@@ -120,15 +135,14 @@ namespace _2011__Semester_Project.Controller
             if (marks.Rows.Count == 0) sb.AppendLine("No marks captured.");
             sb.AppendLine();
 
-            // Member B's saved result for the chosen degree (may not exist yet)
+            // B's saved result for this session/degree — carries interest score and gap
             DataTable result = reportDA.GetSessionResult(sessionID, degreeID);
 
-            // 3. Aligned Interest
+            // 3. Aligned Interest — bands: 70+ Strong, 40–69 Moderate, below 40 Low
             sb.AppendLine("3. Aligned Interest");
             if (result.Rows.Count > 0)
             {
                 double interest = Convert.ToDouble(result.Rows[0]["interestMatchScore"]);
-                // Bands used for the wording: 70 and above is Strong, 40 to 69 is Moderate, below 40 is Low
                 string level = interest >= 70 ? "Strong" : (interest >= 40 ? "Moderate" : "Low");
                 string group = reportDA.GetTopInterestGroup(degreeID);
                 sb.AppendLine("Interest Profile: " + level + " alignment" +
@@ -140,7 +154,7 @@ namespace _2011__Semester_Project.Controller
             }
             sb.AppendLine();
 
-            // 4. Eligibility outcome: never shown as a bare label, always with its reasoning
+            // 4. Eligibility — an outcome is never shown without its reasoning
             sb.AppendLine("4. Eligibility Outcome");
             sb.AppendLine(outcome.ToUpper());
             string gap = result.Rows.Count > 0 && result.Rows[0]["gapObservation"] != DBNull.Value
@@ -151,7 +165,7 @@ namespace _2011__Semester_Project.Controller
             else reasoning = "No explanation was recorded for this session.";
             sb.AppendLine("Reasoning: " + reasoning);
 
-            // Requirement comparison: the learner's marks against the stored requirements
+            // Requirement comparison: learner's marks vs. the degree requirements
             DataTable reqs = reportDA.GetDegreeRequirements(degreeID);
             if (reqs.Rows.Count > 0)
             {
@@ -174,7 +188,7 @@ namespace _2011__Semester_Project.Controller
             }
             sb.AppendLine();
 
-            // 5. Alternatives (inactive degrees already excluded by the query)
+            // 5. Alternatives — inactive degrees already excluded by the DA
             sb.AppendLine("5. Recommended Alternatives");
             DataTable alternatives = reportDA.GetAlternatives(sessionID);
             foreach (DataRow a in alternatives.Rows)
@@ -182,7 +196,7 @@ namespace _2011__Semester_Project.Controller
             if (alternatives.Rows.Count == 0) sb.AppendLine("None.");
             sb.AppendLine();
 
-            // 6. Funding (flagged as sample information to be verified)
+            // 6. Funding — flagged as sample information, same lookup as the funding form
             sb.AppendLine("6. Relevant Funding Options (sample information, verify with the institution)");
             DataTable funding = reportDA.GetOpenFunding(facultyID, degreeID, null);
             foreach (DataRow f in funding.Rows)
@@ -197,39 +211,42 @@ namespace _2011__Semester_Project.Controller
             return sb.ToString();
         }
 
-        // Writes the summary to a text file and records the export in ExportReport
+        // Writes the summary to disk and logs the export as TXT.
         public void SaveSummaryAsText(int sessionID, string summaryText, string filePath)
         {
             File.WriteAllText(filePath, summaryText);
             LogExport(sessionID, summaryText, "TXT");
         }
 
-        // Records an export (TXT, PDF or PRINT) with today's date
+        // Records an export (TXT, PDF or PRINT) in ExportReport.
         public void LogExport(int sessionID, string summaryText, string format)
         {
             ExportReport report = new ExportReport();
             report.SessionID = sessionID;
             report.DateOfExport = DateTime.Now;
             report.FileFormat = format;
-            report.ContentReport = summaryText;   // the column has no length limit
+            report.ContentReport = summaryText;   // no length limit
             exportReportDA.LogExport(report);
         }
 
         // ---------- REPORT 2: Degree Interest and Eligibility (RPT-SUM-002) ----------
-        // Returns the grouped faculty/degree table; the header text comes back in headerText
+
+        // Returns the grid DataTable; the header text is returned via headerText.
+        // RowType column is "Group" or "Data" so the form can format group rows.
+        // End date is inclusive — we add 1 day and use dateOfSession < endExclusive.
         public DataTable GetDegreeInterestReport(DateTime startDate, DateTime endDate, string role, out string headerText)
         {
             RequireStaffAccess(role);
 
             DateTime start = startDate.Date;
-            DateTime endExclusive = endDate.Date.AddDays(1);   // so the whole last day is included
+            DateTime endExclusive = endDate.Date.AddDays(1);
 
             // Totals per outcome
             DataTable counts = reportDA.GetOutcomeCounts(start, endExclusive);
             int total = 0;
             foreach (DataRow r in counts.Rows) total += Convert.ToInt32(r["Total"]);
 
-            // Work out the most selected faculty and degree from the breakdown table
+            // Work out top faculty and top degree from the breakdown table
             DataTable selections = reportDA.GetDegreeSelectionTable(start, endExclusive);
             Dictionary<string, int> facultyTotals = new Dictionary<string, int>();
             string topDegree = "None";
@@ -247,7 +264,7 @@ namespace _2011__Semester_Project.Controller
             foreach (KeyValuePair<string, int> pair in facultyTotals)
                 if (pair.Value > topFacultyCount) { topFacultyCount = pair.Value; topFaculty = pair.Key; }
 
-            // The header, laid out like the Part 1 report
+            // Header block
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("FUTURE PATH ADVICE SYSTEM");
             sb.AppendLine("Degree Interest and Eligibility Report");
@@ -270,6 +287,7 @@ namespace _2011__Semester_Project.Controller
             }
 
             sb.AppendLine();
+            // Four design additions (see design changes log)
             sb.AppendLine("Top Funding Category: " + reportDA.GetTopFundingCategory(start, endExclusive));
             sb.AppendLine("Most common subject gap: " + reportDA.GetMostCommonGap(start, endExclusive));
             sb.AppendLine("Most selected faculty: " + topFaculty);
@@ -278,7 +296,7 @@ namespace _2011__Semester_Project.Controller
             sb.AppendLine("DETAILED BREAKDOWN BY FACULTY AND DEGREE");
             headerText = sb.ToString();
 
-            // The table: a GROUP row for each faculty, then its degrees (already highest Total first)
+            // Grid: a GROUP row per faculty, then data rows per degree.
             DataTable report = new DataTable();
             report.Columns.Add("Faculty");
             report.Columns.Add("Degree Programme");
@@ -287,7 +305,7 @@ namespace _2011__Semester_Project.Controller
             report.Columns.Add("Possible Match");
             report.Columns.Add("Not Eligible");
             report.Columns.Add("More Info Needed");
-            report.Columns.Add("RowType");   // Group or Data: the form uses it for formatting
+            report.Columns.Add("RowType");   // "Group" or "Data"
 
             string currentFaculty = null;
             foreach (DataRow r in selections.Rows)
@@ -304,7 +322,10 @@ namespace _2011__Semester_Project.Controller
         }
 
         // ---------- REPORT 3: Not Currently Eligible Exception (RPT-EXC-001) ----------
-        // Learners grouped by grade with a subtotal after each grade and a grand total at the end
+
+        // Learners with outcome "Not Currently Eligible" or "More Information Needed",
+        // grouped by grade with subtotals and a grand total.
+        // RowType column is "Data", "Subtotal" or "Total" for the form's colouring.
         public DataTable GetExceptionReport(string role, out string headerText)
         {
             RequireStaffAccess(role);
@@ -326,7 +347,7 @@ namespace _2011__Semester_Project.Controller
             report.Columns.Add("Outcome");
             report.Columns.Add("Identified Gaps");
             report.Columns.Add("Session Date");
-            report.Columns.Add("RowType");   // Data, Subtotal or Total: the form uses it for colours
+            report.Columns.Add("RowType");   // "Data", "Subtotal" or "Total"
 
             string currentGrade = null;
             int gradeCount = 0;
@@ -336,7 +357,7 @@ namespace _2011__Semester_Project.Controller
             {
                 string grade = r["Grade"].ToString();
 
-                // The grade changed, so close the previous group with a subtotal row
+                // Grade changed → close the previous group with a subtotal row
                 if (currentGrade != null && grade != currentGrade)
                 {
                     report.Rows.Add("", "Subtotal " + currentGrade, "", gradeCount + " learner(s)", "", "", "Subtotal");
@@ -350,7 +371,7 @@ namespace _2011__Semester_Project.Controller
                 grandTotal++;
             }
 
-            // Close the last group, then add the grand total
+            // Close the last group, then the grand total
             if (currentGrade != null)
                 report.Rows.Add("", "Subtotal " + currentGrade, "", gradeCount + " learner(s)", "", "", "Subtotal");
 
@@ -358,7 +379,7 @@ namespace _2011__Semester_Project.Controller
             return report;
         }
 
-        // The footer line printed under Reports 2 and 3
+        // Footer under Reports 2 and 3.
         public string GetReportFooter(int reportNumber)
         {
             string id = reportNumber == 2 ? "Report - 002" : "RPT-EXC-001";
