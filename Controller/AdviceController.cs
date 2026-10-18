@@ -27,11 +27,11 @@ namespace _2011__Semester_Project.Controller
                                               List<DegreeRequirements> requirements)
         {
             AdviceSession session = new AdviceSession();
-           session.learnerID = learner.learnerID;
-          session.degreeID = degree.degreeID;
+            session.learnerID = learner.learnerID;
+            session.degreeID = degree.degreeID;
             session.dateOfSession = DateTime.Now;
 
-//common null check
+            //common null check
             if (learnerSubjects == null || learnerSubjects.Count == 0 ||
                 requirements == null || requirements.Count == 0)
             {
@@ -40,7 +40,7 @@ namespace _2011__Semester_Project.Controller
                 return session;
             }
 
-           double subjectScore = CalculateSubjectScore(learnerSubjects, requirements);
+            double subjectScore = CalculateSubjectScore(learnerSubjects, requirements);
             double markScore = CalculateMarkMatchScore(learnerSubjects, requirements);
             double interestScore = CalculateInterestScore(learner, degree);
             double facultyScore = CalculateFacultyPreferenceScore(learner, degree);
@@ -64,7 +64,7 @@ namespace _2011__Semester_Project.Controller
                                                      out double interestScore,
                                                      out double facultyScore)
         {
-             subjectScore = 0;
+            subjectScore = 0;
             markScore = 0;
             interestScore = 0;
             facultyScore = 0;
@@ -80,6 +80,7 @@ namespace _2011__Semester_Project.Controller
             {
                 session.eligibleResult = MORE_INFO_NEEDED;
                 session.overallScore = 0;
+                gapText = "There is not enough information to assess this degree: no subjects or no requirements are on record for it.";
                 return session;
             }
 
@@ -91,7 +92,49 @@ namespace _2011__Semester_Project.Controller
             session.overallScore = CalculateScore(subjectScore, markScore, interestScore, facultyScore);
             session.eligibleResult = DetermineOutcome(subjectScore, markScore, session.overallScore, out gapText);
 
+            // replace the general sentence with one that names the subjects and marks
+            string named = BuildNamedGapText(learnerSubjects, requirements);
+            if (named != "") gapText = named;
+
             return session;
+        }
+
+        // Names the missing subjects and the marks that are too low, for example
+        // "Missing required subjects: Mathematics, Physical Sciences."
+        public string BuildNamedGapText(List<LearnerSubject> learnerSubjects,
+                                        List<DegreeRequirements> requirements)
+        {
+            Dictionary<int, string> names = new Dictionary<int, string>();
+            try
+            {
+                foreach (Subject s in new LookupDA().GetSubjects())
+                    names[s.subjectID] = s.subjectName;
+            }
+            catch { }   // if the lookup fails the text falls back to subject numbers
+
+            List<string> missing = new List<string>();
+            List<string> low = new List<string>();
+            foreach (DegreeRequirements req in requirements)
+            {
+                if (!req.isNeeded) continue;
+                string name = names.ContainsKey(req.subjectID) ? names[req.subjectID] : "subject " + req.subjectID;
+
+                LearnerSubject found = null;
+                foreach (LearnerSubject ls in learnerSubjects)
+                {
+                    if (ls.subjectID == req.subjectID) { found = ls; break; }
+                }
+
+                if (found == null)
+                    missing.Add(name);
+                else if (found.mark < req.minMark)
+                    low.Add(name + " (you have " + found.mark + "%, minimum " + req.minMark + "%)");
+            }
+
+            string text = "";
+            if (missing.Count > 0) text = "Missing required subjects: " + string.Join(", ", missing) + ".";
+            if (low.Count > 0) text += (text == "" ? "" : " ") + "Marks below the minimum: " + string.Join(", ", low) + ".";
+            return text;
         }
 
         // ---------- SCORING ----------
@@ -300,13 +343,15 @@ namespace _2011__Semester_Project.Controller
         public List<RecommendationResult> GenerateRecommendations(Learner learner,
                                                                   List<LearnerSubject> learnerSubjects,
                                                                   List<DegreeProgramme> allDegrees,
-                                                                  List<DegreeRequirements> allRequirements)
+                                                                  List<DegreeRequirements> allRequirements,
+                                                                  int excludeDegreeID = 0)
         {
             List<RecommendationResult> results = new List<RecommendationResult>();
 
             foreach (DegreeProgramme degree in allDegrees)
             {
                 if (!degree.isActive) continue;
+                if (degree.degreeID == excludeDegreeID) continue;   // the degree being assessed is not its own alternative
 
                 // Requirements for this degree only
                 List<DegreeRequirements> degreeReqs = new List<DegreeRequirements>();

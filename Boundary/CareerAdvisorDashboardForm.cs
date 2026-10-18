@@ -32,25 +32,33 @@ namespace _2011__Semester_Project.Boundary
 
         // Constructor: builds layout, wires the access-check on load,
         // then shows every session if the role is allowed.
+
         public CareerAdvisorDashboardForm(string role)
         {
             InitializeComponent();
+
             this.role = role;
             SetupControls();
 
-            // Access control: the load event fires once the form is visible.
-            // If the role is not allowed, we show a warning and close the form.
             this.Load += (s, e) =>
             {
                 if (!reportController.HasStaffAccess(this.role))
                 {
-                    MessageBox.Show("Access denied: only Career Advisors and Administrators can open this screen.", "Access Denied");
-                    this.Close();
-                }
-            };
+                    MessageBox.Show(
+                        "Access denied: only Career Advisors and Administrators can open this screen.",
+                        "Access Denied",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
 
-            if (reportController.HasStaffAccess(role)) LoadLearners(null);   // null = show everyone
+                    this.Close();
+                    return;
+                }
+
+                LoadLearners(null);
+            };
         }
+
 
         // Builds all controls in code (no Designer). Standard layout:
         // title on top, search bar below, grid in the middle, action buttons at the bottom.
@@ -99,7 +107,13 @@ namespace _2011__Semester_Project.Boundary
             btnReports.Width = 130;
             btnReports.Location = new Point(200, 430);
             // Passes the role on to ReportSelectionForm so the RBAC check continues there.
-            btnReports.Click += (s, e) => new ReportSelectionForm(role).Show();
+
+            btnReports.Click += (s, e) =>
+            {
+                ReportSelectionForm reports = new ReportSelectionForm(role);
+                reports.Show(this);
+            };
+
 
             btnLogout = new Button();
             btnLogout.Text = "Logout";
@@ -142,7 +156,15 @@ namespace _2011__Semester_Project.Boundary
                 return;
             }
             int sessionID = Convert.ToInt32(dgvLearners.SelectedRows[0].Cells["SessionID"].Value);
-            new ReadOnlyAdvisorySummaryForm(sessionID).Show();
+            ReadOnlyAdvisorySummaryForm summary =
+    new ReadOnlyAdvisorySummaryForm(sessionID);
+
+            summary.Show(this);
+        }
+
+        private void CareerAdvisorDashboardForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

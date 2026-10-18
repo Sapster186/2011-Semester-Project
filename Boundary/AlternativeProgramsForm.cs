@@ -14,7 +14,6 @@ using System.Windows.Forms;
 namespace _2011__Semester_Project.Boundary
 {
     public partial class AlternativeProgramsForm : Form
-
     {
         private AdviceController adviceController = new AdviceController();
         private LearnerSubjectDA subjectDA = new LearnerSubjectDA();
@@ -24,11 +23,14 @@ namespace _2011__Semester_Project.Boundary
 
         private int learnerID;
         private int sessionID;
-        public AlternativeProgramsForm(int learnerID, int sessionID)
+        private int degreeID;
+
+        public AlternativeProgramsForm(int learnerID, int sessionID, int degreeID)
         {
             InitializeComponent();
             this.learnerID = learnerID;
             this.sessionID = sessionID;
+            this.degreeID = degreeID;
         }
 
         private void AlternativeProgramsForm_Load(object sender, EventArgs e)
@@ -50,6 +52,9 @@ namespace _2011__Semester_Project.Boundary
 
                 foreach (RecommendationResult r in recs)
                 {
+                    // Skip the degree the user originally applied for
+                    if (r.degreeID == this.degreeID) continue;
+
                     DegreeProgramme d = degreeDA.GetDegreeByID(r.degreeID);
                     if (d == null) continue;
 
@@ -68,6 +73,12 @@ namespace _2011__Semester_Project.Boundary
         private void closeButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        // We added this back in so the Designer file doesn't crash!
+        private void AlternativeProgramsForm_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

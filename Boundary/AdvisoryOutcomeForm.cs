@@ -21,11 +21,11 @@ namespace _2011__Semester_Project.Boundary
         private DegreeProgrammeDA degreeDA = new DegreeProgrammeDA();
         private DegreeRequirementsDA reqDA = new DegreeRequirementsDA();
 
-
         private int learnerID;
         private int degreeID;
         private int sessionID = 0;
         private int facultyID = 0;
+
         public AdvisoryOutcomeForm(int learnerID, int degreeID)
         {
             InitializeComponent();
@@ -58,34 +58,30 @@ namespace _2011__Semester_Project.Boundary
 
                 sessionID = adviceController.SaveSession(session);
 
-                if (session.eligibleResult == AdviceController.STRONG_MATCH
-                    || session.eligibleResult == AdviceController.POSSIBLE_MATCH)
-                {
-                    RecommendationResult chosen = new RecommendationResult();
-                    chosen.sessionID = sessionID;
-                    chosen.degreeID = degreeID;
-                    chosen.subjectMatchScore = subjectScore;
-                    chosen.markMatchScore = markScore;
-                    chosen.interestMatchScore = interestScore;
-                    chosen.desiredFacultyScore = facultyScore;
-                    chosen.overallScore = session.overallScore;
-                    chosen.isAlternative = false;
-                    chosen.gapObservation = gap;
-                    adviceController.SaveRecommendations(new List<RecommendationResult> { chosen });
-                }
-                else
-                {
-                    List<DegreeProgramme> allDegrees = degreeDA.GetAllActiveDegrees();
-                    List<DegreeRequirements> allReqs = reqDA.GetAllRequirements();
+                // The chosen degree's result is saved for every outcome, so the summary and the
+                // reports can show its explanation (gapObservation), also for Not Currently Eligible.
+                RecommendationResult chosen = new RecommendationResult();
+                chosen.sessionID = sessionID;
+                chosen.degreeID = degreeID;
+                chosen.subjectMatchScore = subjectScore;
+                chosen.markMatchScore = markScore;
+                chosen.interestMatchScore = interestScore;
+                chosen.desiredFacultyScore = facultyScore;
+                chosen.overallScore = session.overallScore;
+                chosen.isAlternative = false;
+                chosen.gapObservation = gap;
+                adviceController.SaveRecommendations(new List<RecommendationResult> { chosen });
 
-                    List<RecommendationResult> recs = adviceController.GenerateRecommendations(
-                        learner, subjects, allDegrees, allReqs);
+                // Alternatives are saved for every outcome too, with the chosen degree left out.
+                List<DegreeProgramme> allDegrees = degreeDA.GetAllActiveDegrees();
+                List<DegreeRequirements> allReqs = reqDA.GetAllRequirements();
+                List<RecommendationResult> recs = adviceController.GenerateRecommendations(
+                    learner, subjects, allDegrees, allReqs, degreeID); // <-- This now works!
 
-                    foreach (RecommendationResult r in recs)
-                    {
-                        r.sessionID = sessionID;
-                        adviceController.SaveRecommendations(new List<RecommendationResult> { r });
-                    }
+                foreach (RecommendationResult r in recs)
+                {
+                    r.sessionID = sessionID;
+                    adviceController.SaveRecommendations(new List<RecommendationResult> { r });
                 }
 
                 outcomeLbl.Text = session.eligibleResult;
@@ -99,9 +95,11 @@ namespace _2011__Semester_Project.Boundary
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
         private void alternativesButton_Click(object sender, EventArgs e)
         {
-            AlternativeProgramsForm alt = new AlternativeProgramsForm(learnerID, sessionID);
+            // <-- This now works perfectly with the updated AlternativeProgramsForm!
+            AlternativeProgramsForm alt = new AlternativeProgramsForm(learnerID, sessionID, degreeID);
             alt.Show();
         }
 
