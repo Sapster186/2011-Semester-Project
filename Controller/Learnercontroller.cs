@@ -121,7 +121,7 @@ namespace _2011__Semester_Project.Controller
 
                 CurrentLearnerID = id;
                 pendingLearner = null;   // stops a double click saving the same learner twice
-                pendingSubjects = new List<LearnerSubject>();   // the next learner must not inherit these subjects
+                pendingSubjects = new List<LearnerSubject>();   //the learner does not inherit any subjects
                 return null;
             }
             catch (SqlException ex)

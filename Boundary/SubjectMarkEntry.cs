@@ -14,14 +14,14 @@ namespace _2011__Semester_Project.Boundary
 {
     public partial class SubjectMarkEntry : Form
     {
-        // List to track duplicate subjects behind the scenes
+        // List to track duplicate subjects 
         private List<string> addedSubjects = new List<string>();
 
         public SubjectMarkEntry()
         {
             InitializeComponent();
 
-            // Disables the buttons by default when the form opens
+            // Disables buttons by default 
             btnAddSubject.Enabled = false;
             btnNext.Enabled = false;
         }
@@ -119,7 +119,7 @@ namespace _2011__Semester_Project.Boundary
             btnNext.Enabled = true;
         }
 
-        // Links to next! form
+        
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (LearnerController.SubjectCount == 0)
@@ -130,7 +130,7 @@ namespace _2011__Semester_Project.Boundary
             InterestQuestionnaireForm nextForm = new InterestQuestionnaireForm();
             nextForm.MdiParent = this.MdiParent;
             nextForm.Show();
-            this.Close();   // Closes form so user starts on a new form
+            this.Close();   // Closes form 
 
         }
     }
