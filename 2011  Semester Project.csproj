@@ -292,9 +292,13 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-   <ItemGroup>
+  <ItemGroup>
     <Content Include="Database\FuturePath.mdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Database\FuturePath_log.ldf">
+      <DependentUpon>FuturePath.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Database\Interest_Fix %282%29.sql" />
     <Content Include="Database\seed_funding.sql" />
