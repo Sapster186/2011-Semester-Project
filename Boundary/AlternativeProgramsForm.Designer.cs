@@ -74,7 +74,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "AlternativeProgramsForm";
             this.Text = "AlternativeProgramsForm";
-            this.Load += new System.EventHandler(this.AlternativeProgramsForm_Load_1);
+            this.Load += new System.EventHandler(this.AlternativeProgramsForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

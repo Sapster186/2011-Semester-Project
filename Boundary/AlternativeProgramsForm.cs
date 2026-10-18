@@ -75,7 +75,7 @@ namespace _2011__Semester_Project.Boundary
             this.Close();
         }
 
-        // We added this back in so the Designer file doesn't crash!
+       
         private void AlternativeProgramsForm_Load_1(object sender, EventArgs e)
         {
 
