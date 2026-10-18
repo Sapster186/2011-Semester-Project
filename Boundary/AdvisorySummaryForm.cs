@@ -5,12 +5,22 @@ using _2011__Semester_Project.Controller;
 
 namespace _2011__Semester_Project.Boundary
 {
+    // AdvisorySummaryForm — Report 1 (the learner's Advisory Summary).
+    //
+    // Built in code (no designer). Two modes:
+    //   - requireExport = true  → the learner view. Save/export/print is mandatory
+    //                             before the form can close.
+    //   - requireExport = false → the advisor's read-only view (used by
+    //                             ReadOnlyAdvisorySummaryForm).
+    //
+    // Member B opens it with just the session ID:
+    //     new AdvisorySummaryForm(sessionID).Show();
     public partial class AdvisorySummaryForm : Form
     {
         private ReportController reportController = new ReportController();
         private int sessionID;
         private bool requireExport;         // true for the learner, false for the advisor's read-only view
-        private bool actionDone = false;    // becomes true once the summary is saved, exported or printed
+        private bool actionDone = false;    // set to true once save/export/print succeeds
 
         private TextBox txtSummary;
         private Label lblFooter;
@@ -19,8 +29,8 @@ namespace _2011__Semester_Project.Boundary
         private Button btnPrint;
         private Button btnClose;
 
-        // Member B opens this with just the session ID: new AdvisorySummaryForm(sessionID).Show();
-        // The learner must save, export or print before the window will close.
+        // Constructor: builds the layout, loads the summary text from the controller,
+        // and wires the FormClosing guard.
         public AdvisorySummaryForm(int sessionID, bool requireExport = true)
         {
             InitializeComponent();
@@ -28,11 +38,15 @@ namespace _2011__Semester_Project.Boundary
             this.requireExport = requireExport;
             SetupControls();
 
+            // Controller builds the whole summary string; the form only displays it.
             txtSummary.Text = reportController.BuildAdvisorySummaryText(sessionID);
-            lblFooter.Text = reportController.GetFooterText();   // always visible, outside the scrolling text
+            // Footer is separate so it's always visible outside the scrolling text.
+            lblFooter.Text = reportController.GetFooterText();
             this.FormClosing += AdvisorySummaryForm_FormClosing;
         }
 
+        // Builds all controls in code. The layout follows the screen standard
+        // (heading at top, content centre, buttons at bottom).
         private void SetupControls()
         {
             this.Text = "Future Path - Advisory Summary";
@@ -43,7 +57,7 @@ namespace _2011__Semester_Project.Boundary
             txtSummary.Multiline = true;
             txtSummary.ReadOnly = true;
             txtSummary.ScrollBars = ScrollBars.Vertical;
-            txtSummary.Font = new Font("Consolas", 9);
+            txtSummary.Font = new Font("Consolas", 9);   // monospace so columns line up
             txtSummary.Location = new Point(20, 20);
             txtSummary.Width = 660;
             txtSummary.Height = 430;
@@ -85,19 +99,21 @@ namespace _2011__Semester_Project.Boundary
             this.Controls.Add(btnClose);
         }
 
-        // The summary plus the footer: this is what gets saved, exported and printed
+        // Summary + footer: what gets saved/exported/printed.
         private string FullText()
         {
             return txtSummary.Text + Environment.NewLine + Environment.NewLine + lblFooter.Text;
         }
 
-        // Called after any successful save, export or print: unlocks closing and shows the export date
+        // Called after any successful save/export/print. Unlocks closing and
+        // shows the export date (so the user knows the action took effect).
         private void FinishAction(string message)
         {
             actionDone = true;
             MessageBox.Show(message + "\n\nDate of export: " + DateTime.Now.ToString("dd/MM/yyyy"), "Done");
         }
 
+        // Save as Text File: writes the file and logs an ExportReport row (TXT).
         private void BtnSaveText_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
@@ -110,6 +126,7 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
+        // Save as PDF: uses Windows "Microsoft Print to PDF", then logs an ExportReport row (PDF).
         private void BtnSavePdf_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
@@ -125,6 +142,7 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
+        // Print: sends to the default printer, then logs an ExportReport row (PRINT).
         private void BtnPrint_Click(object sender, EventArgs e)
         {
             if (PrintHelper.Print(FullText(), txtSummary.Font))
@@ -134,7 +152,9 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
-        // Spec rule: the session cannot close (even with the X button) until the summary is saved, exported or printed
+        // Spec rule: the learner's session cannot close (even with the X button)
+        // until the summary is saved, exported or printed. The advisor's
+        // read-only view has requireExport = false, so this check is skipped.
         private void AdvisorySummaryForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (requireExport && !actionDone)

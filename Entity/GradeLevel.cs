@@ -8,6 +8,7 @@ namespace _2011__Semester_Project.Entity
 {
     public class GradeLevel
     {
+        // All attributes connected to grade level
         public int gradeLevelID { get; set; }
         public string gradeName { get; set; }
 
@@ -24,7 +25,8 @@ namespace _2011__Semester_Project.Entity
             this.gradeName = gradeName;
         }
 
-        // grade level translates to grade name 
+        // This converts the numerical grade level to a grade name
+        // ie 1 = Grade 11 and 2 = Grade 12
         public override string ToString()
         {
             return gradeName;

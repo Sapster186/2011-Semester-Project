@@ -7,7 +7,7 @@ namespace _2011__Semester_Project.DataAccess
 {
     public class LearnerSubjectDA
     {
-        // insert one subject and mark for a learner
+        // Inserts a subject and mark
         public void Insert(LearnerSubject ls)
         {
             SqlConnection conn = DatabaseHelper.GetConnection();
@@ -33,7 +33,7 @@ namespace _2011__Semester_Project.DataAccess
             }
         }
 
-        // select and return all of a learner's subjects and marks based on their specific ID
+        // select and return all of a learner's subjects and marks based on the ID
         public List<LearnerSubject> GetByLearner(int learnerID)
         {
             List<LearnerSubject> list = new List<LearnerSubject>();

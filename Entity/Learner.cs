@@ -8,6 +8,10 @@ namespace _2011__Semester_Project.Entity
 {
     public class Learner
     {
+
+
+        // All learner attributes and constructors that are attributed to the learner
+        // 
         public int learnerID { get; set; }
         public int gradeLevelID { get; set; }
         public string name { get; set; }

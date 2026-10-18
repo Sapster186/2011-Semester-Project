@@ -8,6 +8,8 @@ namespace _2011__Semester_Project.Entity
 {
     public class LearnerInterestAnswer
     {
+        // Hold all learner interest data, forreign key to the learner and interest query
+
         public int answerID { get; set; }
         public int learnerID { get; set; }
         public int queryID { get; set; }
