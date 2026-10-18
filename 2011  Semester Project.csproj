@@ -94,9 +94,6 @@
     <Compile Include="Boundary\CareerAdvisorDashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Boundary\CareerAdvisorDashboardForm.Designer.cs">
-      <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Boundary\FacultyDegreeSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\AlternativeProgramsForm.resx">
       <DependentUpon>AlternativeProgramsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Boundary\CareerAdvisorDashboardForm.resx">
+      <DependentUpon>CareerAdvisorDashboardForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Boundary\FacultyDegreeSelectionForm.resx">
       <DependentUpon>FacultyDegreeSelectionForm.cs</DependentUpon>

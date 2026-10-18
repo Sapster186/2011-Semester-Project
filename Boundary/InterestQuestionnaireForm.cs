@@ -107,6 +107,9 @@ namespace _2011__Semester_Project.Boundary
                 dgvQuestions.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
 
+        private void dgvQuestions_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
+        }
     }
 }

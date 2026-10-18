@@ -66,7 +66,7 @@ namespace _2011__Semester_Project.Boundary
             int gradeId = Convert.ToInt32(cmbGrade.SelectedValue);
 
             string err = LearnerController.CaptureProfile(txtFullName.Text, txtSchoolName.Text,
-                gradeId, cmbProvince.Text, txtContact.Text); // controller checks to validate all fields
+                gradeId, cmbProvince.Text, txtContact.Text); // controller validates all fields
             if (err != null)
             {
                 MessageBox.Show(err, "Check the profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -76,7 +76,7 @@ namespace _2011__Semester_Project.Boundary
             SubjectMarkEntry subjectForm = new SubjectMarkEntry();
             subjectForm.MdiParent = this.MdiParent;
             subjectForm.Show();
-            this.Close();   // Close, not Hide: a hidden form would be reused for the next learner with the old text in it
+            this.Close();   // closes to prevent duplicate forms
 
         }
     }

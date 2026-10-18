@@ -6,21 +6,10 @@ using _2011__Semester_Project.Controller;
 namespace _2011__Semester_Project.Boundary
 {
     // CareerAdvisorDashboardForm — the Career Advisor's landing screen.
-    //
-    // Shows one row per AdviceSession (learner, grade, degree, outcome, gap)
-    // and provides the way into:
-    //   - ReadOnlyAdvisorySummaryForm (read-only view of a session)
-    //   - ReportSelectionForm (Reports 2 and 3)
-    //
-    // Access: role-based. Only "Career Advisor" and "Administrator" may open it.
-    // The role is passed in by Member C's login/main window:
-    //     new CareerAdvisorDashboardForm(role).Show();
-    // The form checks it on load and closes itself if the role is not allowed.
-    // The controller checks again inside SearchSessions as a second line of defence.
-    public partial class CareerAdvisorDashboardForm : Form
+    public class CareerAdvisorDashboardForm : Form
     {
         private ReportController reportController = new ReportController();
-        private string role;   // the logged-in role, passed in by the login/main window
+        private string role;
 
         private Label lblTitle;
         private TextBox txtSearchName;
@@ -30,16 +19,11 @@ namespace _2011__Semester_Project.Boundary
         private Button btnReports;
         private Button btnLogout;
 
-        // Constructor: builds layout, wires the access-check on load,
-        // then shows every session if the role is allowed.
         public CareerAdvisorDashboardForm(string role)
         {
-            InitializeComponent();
             this.role = role;
-            SetupControls();
+            SetupControls(); // Builds the UI directly without InitializeComponent()
 
-            // Access control: the load event fires once the form is visible.
-            // If the role is not allowed, we show a warning and close the form.
             this.Load += (s, e) =>
             {
                 if (!reportController.HasStaffAccess(this.role))
@@ -49,11 +33,9 @@ namespace _2011__Semester_Project.Boundary
                 }
             };
 
-            if (reportController.HasStaffAccess(role)) LoadLearners(null);   // null = show everyone
+            if (reportController.HasStaffAccess(role)) LoadLearners(null);
         }
 
-        // Builds all controls in code (no Designer). Standard layout:
-        // title on top, search bar below, grid in the middle, action buttons at the bottom.
         private void SetupControls()
         {
             this.Text = "Future Path - Career Advisor Dashboard";
@@ -80,7 +62,7 @@ namespace _2011__Semester_Project.Boundary
             dgvLearners.Location = new Point(20, 100);
             dgvLearners.Width = 840;
             dgvLearners.Height = 310;
-            dgvLearners.ReadOnly = true;          // advisors can look but not change anything
+            dgvLearners.ReadOnly = true;
             dgvLearners.AllowUserToAddRows = false;
             dgvLearners.MultiSelect = false;
             dgvLearners.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -98,7 +80,6 @@ namespace _2011__Semester_Project.Boundary
             btnReports.Text = "Generate Reports";
             btnReports.Width = 130;
             btnReports.Location = new Point(200, 430);
-            // Passes the role on to ReportSelectionForm so the RBAC check continues there.
             btnReports.Click += (s, e) => new ReportSelectionForm(role).Show();
 
             btnLogout = new Button();
@@ -115,10 +96,6 @@ namespace _2011__Semester_Project.Boundary
             this.Controls.Add(btnLogout);
         }
 
-        // Fills the grid with learner sessions (with outcome and gap).
-        // Passing null for nameFilter shows every session.
-        // The controller throws UnauthorizedAccessException if the role is not
-        // allowed — caught here so the form shows a friendly message.
         private void LoadLearners(string nameFilter)
         {
             try
@@ -131,9 +108,6 @@ namespace _2011__Semester_Project.Boundary
             }
         }
 
-        // Opens the read-only advisory summary for the selected row.
-        // Requires a row to be selected first; the SessionID column carries
-        // the ID passed to the ReadOnlyAdvisorySummaryForm.
         private void BtnViewSummary_Click(object sender, EventArgs e)
         {
             if (dgvLearners.SelectedRows.Count == 0)

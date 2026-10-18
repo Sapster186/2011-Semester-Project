@@ -54,12 +54,14 @@
             this.dgvQuestions.RowTemplate.Height = 28;
             this.dgvQuestions.Size = new System.Drawing.Size(855, 361);
             this.dgvQuestions.TabIndex = 0;
+            this.dgvQuestions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvQuestions_CellContentClick);
             this.dgvQuestions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvQuestions_CellValueChanged);
             this.dgvQuestions.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvQuestions_CurrentCellDirtyStateChanged);
             // 
             // database1DataSetBindingSource
             // 
             this.database1DataSetBindingSource.DataSource = this.database1DataSet;
+            this.database1DataSetBindingSource.Position = 0;
             // 
             // database1DataSet
             // 
@@ -78,8 +80,9 @@
             // 
             // Column1
             // 
+            this.Column1.FillWeight = 120F;
             this.Column1.HeaderText = "Question";
-            this.Column1.MinimumWidth = 8;
+            this.Column1.MinimumWidth = 9;
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             // 
