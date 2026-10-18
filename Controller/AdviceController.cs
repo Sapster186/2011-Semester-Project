@@ -152,7 +152,6 @@ namespace _2011__Semester_Project.Controller
             return totalScore / count;
         }
 
-        // Interest alignment. Placeholder for now: neutral 50 until Member A/C's interest DAs are in.
         // Real interest score: learner answers x question weight x degree mapping weight
         public double CalculateInterestScore(Learner learner, DegreeProgramme degree)
         {
@@ -215,14 +214,14 @@ namespace _2011__Semester_Project.Controller
             }
         }
 
-        // Bonus if the learner's preferred faculty matches this degree's faculty
+        // bonus if the learner's preferred faculty matches this degree's faculty
         public double CalculateFacultyPreferenceScore(Learner learner, DegreeProgramme degree)
         {
-            // No preference field on Learner yet, so no bonus for now
+            // no  preference field on Learner yet, so no bonus for now
             return 0;
         }
 
-        // Weighted combine: subjects 40%, marks 40%, interest 15%, faculty 5%
+        // weighted, subjects 40%, marks 40%, interest 15%, faculty 5%
         public double CalculateScore(double subjectScore, double markScore,
                                      double interestScore, double facultyScore)
         {
@@ -296,7 +295,7 @@ namespace _2011__Semester_Project.Controller
         }
 
         // ---------- GENERATE RECOMMENDATIONS ----------
-        // Scores every active degree, keeps the matches, sorts best-first
+        // scores every active degree, keeps the matches, sorts best-first
         public List<RecommendationResult> GenerateRecommendations(Learner learner,
                                                                   List<LearnerSubject> learnerSubjects,
                                                                   List<DegreeProgramme> allDegrees,
@@ -308,7 +307,7 @@ namespace _2011__Semester_Project.Controller
             {
                 if (!degree.isActive) continue;
 
-                // Requirements for this degree only
+                // requirements for this degree only
                 List<DegreeRequirements> degreeReqs = new List<DegreeRequirements>();
                 foreach (DegreeRequirements req in allRequirements)
                     if (req.degreeID == degree.degreeID)
@@ -341,7 +340,7 @@ namespace _2011__Semester_Project.Controller
                 }
             }
 
-            // Highest score first
+            // highest score first
             results.Sort((a, b) => b.overallScore.CompareTo(a.overallScore));
             return results;
         }
